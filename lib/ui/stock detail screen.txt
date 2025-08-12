@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Stock Details</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet"/>
+<style>
+        body {
+            font-family: 'Roboto', sans-serif;
+        }
+    </style>
+</head>
+<body class="bg-gray-100">
+<div class="container mx-auto p-4 sm:p-6 lg:p-8">
+<div class="bg-white rounded-xl shadow-lg p-6 md:p-8">
+<div class="flex flex-col md:flex-row justify-between items-start md:items-center mb-6">
+<div>
+<h1 class="text-2xl sm:text-3xl font-bold text-gray-800">Stock Details</h1>
+<p class="text-gray-500 mt-1">Manage and track your product inventory.</p>
+</div>
+<div class="flex items-center space-x-2 mt-4 md:mt-0">
+<button class="flex items-center bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-4 rounded-lg transition duration-300">
+<span class="material-icons mr-2">add</span>
+                        Add Product
+                    </button>
+<button class="flex items-center bg-gray-200 hover:bg-gray-300 text-gray-700 font-bold py-2 px-4 rounded-lg transition duration-300">
+<span class="material-icons mr-2">print</span>
+                        Print Report
+                    </button>
+</div>
+</div>
+<div class="flex flex-col md:flex-row items-center justify-between mb-6 space-y-4 md:space-y-0 md:space-x-4">
+<div class="relative w-full md:w-1/2 lg:w-1/3">
+<span class="material-icons absolute left-3 top-1/2 -translate-y-1/2 text-gray-400">search</span>
+<input class="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500" placeholder="Search by product name, SKU..." type="text"/>
+</div>
+<div class="flex items-center space-x-4">
+<div class="relative">
+<select class="appearance-none bg-white border border-gray-300 text-gray-700 py-2 px-4 pr-8 rounded-lg leading-tight focus:outline-none focus:bg-white focus:border-blue-500">
+<option>All Categories</option>
+<option>Electronics</option>
+<option>Apparel</option>
+<option>Groceries</option>
+</select>
+<div class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-gray-700">
+<span class="material-icons">expand_more</span>
+</div>
+</div>
+<button class="flex items-center text-gray-600 hover:text-blue-500">
+<span class="material-icons">filter_list</span>
+<span class="ml-1">Filters</span>
+</button>
+</div>
+</div>
+<div class="overflow-x-auto rounded-lg border border-gray-200">
+<table class="w-full text-left text-sm text-gray-500">
+<thead class="bg-gray-50 text-xs text-gray-700 uppercase">
+<tr>
+<th class="px-6 py-3" scope="col">
+<input class="rounded border-gray-300 text-blue-600 shadow-sm focus:border-blue-300 focus:ring focus:ring-offset-0 focus:ring-blue-200 focus:ring-opacity-50" type="checkbox"/>
+</th>
+<th class="px-6 py-3" scope="col">Product Name</th>
+<th class="px-6 py-3" scope="col">SKU</th>
+<th class="px-6 py-3" scope="col">Category</th>
+<th class="px-6 py-3 text-center" scope="col">Quantity</th>
+<th class="px-6 py-3 text-right" scope="col">Price</th>
+<th class="px-6 py-3 text-center" scope="col">Status</th>
+<th class="px-6 py-3 text-center" scope="col">Actions</th>
+</tr>
+</thead>
+<tbody>
+<tr class="bg-white border-b hover:bg-gray-50">
+<td class="w-4 p-4 px-6">
+<input class="rounded border-gray-300 text-blue-600 shadow-sm focus:border-blue-300 focus:ring focus:ring-offset-0 focus:ring-blue-200 focus:ring-opacity-50" type="checkbox"/>
+</td>
+<th class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap flex items-center" scope="row">
+<img alt="Smartphone image" class="w-10 h-10 rounded-full mr-4" src="https://lh3.googleusercontent.com/aida-public/AB6AXuB5naxdj3nk8NrcBANJyl1Op6KXWK6OZe1k0qlm_bS2grUCytnIqu5a7bTaQayDFn9f02ygrbH6HE3DtBEuNS2q612pMZpti3XBGB0_XAbX33H34T6zMgvloFKbcIB9RK-VDWFiAq9fNnmwURJKN5fGrlbkTS2zlrgjXdZXIYldisXOk_i4Kw7-kBd3BtUWiB6qYGih7We27eJfseURdVEMgVpz4_UdbYA7KdCfZwRkK_L02FcGubFzGLid9Dinv1Fm37OKSeZorrA"/>
+                                Smart Phone X
+                            </th>
+<td class="px-6 py-4">SP-X-2023</td>
+<td class="px-6 py-4">Electronics</td>
+<td class="px-6 py-4 text-center">250</td>
+<td class="px-6 py-4 text-right">$999.00</td>
+<td class="px-6 py-4 text-center">
+<span class="px-2 py-1 text-xs font-medium text-green-800 bg-green-100 rounded-full">In Stock</span>
+</td>
+<td class="px-6 py-4 text-center">
+<button class="text-blue-600 hover:text-blue-900"><span class="material-icons text-base">edit</span></button>
+<button class="text-red-600 hover:text-red-900 ml-2"><span class="material-icons text-base">delete</span></button>
+</td>
+</tr>
+<tr class="bg-white border-b hover:bg-gray-50">
+<td class="w-4 p-4 px-6">
+<input class="rounded border-gray-300 text-blue-600 shadow-sm focus:border-blue-300 focus:ring focus:ring-offset-0 focus:ring-blue-200 focus:ring-opacity-50" type="checkbox"/>
+</td>
+<th class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap flex items-center" scope="row">
+<img alt="Laptop image" class="w-10 h-10 rounded-full mr-4" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCK5jPrmEH6e0l8UHkI1__bZPQCkADSeIcnQHXnBYnCajl4Pqc0hGhIZdlw26b1hy5YwBTDHKzHs0I-fufSTW4CrRE1bd_4DRZx8a26titHkfcODvftroVV3LxC6REho01dcc0_9D2o4IPnpIJCo9Pl0wYYP7OQDVaw0xxJ9vflq44u2rFVlrbWRLuZb1YTa-9_RC-hU3v6Y4mv4O7vGZVxFzjjbzPzPaPFci6QdRjgjUUNxcXvQB27PBjVErR8QzD3W8_99Ddp1pA"/>
+                                Pro Laptop 15"
+                            </th>
+<td class="px-6 py-4">LP-PRO-15</td>
+<td class="px-6 py-4">Electronics</td>
+<td class="px-6 py-4 text-center">120</td>
+<td class="px-6 py-4 text-right">$1499.00</td>
+<td class="px-6 py-4 text-center">
+<span class="px-2 py-1 text-xs font-medium text-green-800 bg-green-100 rounded-full">In Stock</span>
+</td>
+<td class="px-6 py-4 text-center">
+<button class="text-blue-600 hover:text-blue-900"><span class="material-icons text-base">edit</span></button>
+<button class="text-red-600 hover:text-red-900 ml-2"><span class="material-icons text-base">delete</span></button>
+</td>
+</tr>
+<tr class="bg-white border-b hover:bg-gray-50">
+<td class="w-4 p-4 px-6">
+<input class="rounded border-gray-300 text-blue-600 shadow-sm focus:border-blue-300 focus:ring focus:ring-offset-0 focus:ring-blue-200 focus:ring-opacity-50" type="checkbox"/>
+</td>
+<th class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap flex items-center" scope="row">
+<img alt="T-shirt image" class="w-10 h-10 rounded-full mr-4" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCEVPT9sPPu_qSvDLgm1KiCm-pdOD_JFiyjADP41Kcj-rRb_8Q9lVV14rRgOnilq0XJFv9fZnptLAMspKGoLQYwGDAzwonH_IxVGpaW0eLOEbbzs3NRBaCzaquofBZntDd7OUFk4kwIqDabTZHwQFD99Yok04YgpbglRMziKYy5DKy9QYkX-0QgguYvWeKeaoWtaI5Aje_JaVkddPS7jn020JJGU6EcunQBL7aw-Br_NEspzqFBUm37rnUdyK2zgvjA6Te9DmbHZzQ"/>
+                                Classic T-Shirt
+                            </th>
+<td class="px-6 py-4">TS-CL-M</td>
+<td class="px-6 py-4">Apparel</td>
+<td class="px-6 py-4 text-center">50</td>
+<td class="px-6 py-4 text-right">$25.00</td>
+<td class="px-6 py-4 text-center">
+<span class="px-2 py-1 text-xs font-medium text-yellow-800 bg-yellow-100 rounded-full">Low Stock</span>
+</td>
+<td class="px-6 py-4 text-center">
+<button class="text-blue-600 hover:text-blue-900"><span class="material-icons text-base">edit</span></button>
+<button class="text-red-600 hover:text-red-900 ml-2"><span class="material-icons text-base">delete</span></button>
+</td>
+</tr>
+<tr class="bg-white hover:bg-gray-50">
+<td class="w-4 p-4 px-6">
+<input class="rounded border-gray-300 text-blue-600 shadow-sm focus:border-blue-300 focus:ring focus:ring-offset-0 focus:ring-blue-200 focus:ring-opacity-50" type="checkbox"/>
+</td>
+<th class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap flex items-center" scope="row">
+<img alt="Coffee Beans image" class="w-10 h-10 rounded-full mr-4" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBZJrYC3IUqC06W9NmoRxNOpSASi3tIZgG3AoL0l8ZPL93ILhgpM1xCU_47jFMgVJPO_ievARQNO1QBLmaOl0w8pIoOapoQNh6ncH8i1HhJZzvLEJFQGkUB1WIRF9TZfe1S34MtrOuke2Tks2HQUWV6f2xKbNUBNyXC8yYv6HUoTITteRg9LBQqzc0LCs8cN2fggpz0vfXjxV3ZyY-wJ0ANrA1vpRNTyB9E0sL8nkQnZ-4pDh-OnWuwVzzQqn48sQ0uvxupwDdYWzE"/>
+                                Organic Coffee Beans
+                            </th>
+<td class="px-6 py-4">CB-ORG-1KG</td>
+<td class="px-6 py-4">Groceries</td>
+<td class="px-6 py-4 text-center">0</td>
+<td class="px-6 py-4 text-right">$15.50</td>
+<td class="px-6 py-4 text-center">
+<span class="px-2 py-1 text-xs font-medium text-red-800 bg-red-100 rounded-full">Out of Stock</span>
+</td>
+<td class="px-6 py-4 text-center">
+<button class="text-blue-600 hover:text-blue-900"><span class="material-icons text-base">edit</span></button>
+<button class="text-red-600 hover:text-red-900 ml-2"><span class="material-icons text-base">delete</span></button>
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="flex flex-col md:flex-row justify-between items-center mt-6">
+<span class="text-sm text-gray-700">
+                    Showing <span class="font-semibold text-gray-900">1</span> to <span class="font-semibold text-gray-900">4</span> of <span class="font-semibold text-gray-900">100</span> Entries
+                </span>
+<div class="inline-flex mt-2 xs:mt-0">
+<button class="flex items-center justify-center px-3 h-8 text-sm font-medium text-white bg-gray-800 rounded-l hover:bg-gray-900">
+                        Prev
+                    </button>
+<button class="flex items-center justify-center px-3 h-8 text-sm font-medium text-white bg-gray-800 border-0 border-l border-gray-700 rounded-r hover:bg-gray-900">
+                        Next
+                    </button>
+</div>
+</div>
+</div>
+</div>
+
+</body></html>

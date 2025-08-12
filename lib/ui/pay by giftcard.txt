@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Pay by Gift Card</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&amp;display=swap" rel="stylesheet"/>
+<style type="text/tailwindcss">
+        body {
+            font-family: 'Roboto', sans-serif;
+        }
+        .material-symbols-outlined {
+            font-variation-settings:
+            'FILL' 0,
+            'wght' 400,
+            'GRAD' 0,
+            'opsz' 24
+        }
+    </style>
+</head>
+<body class="bg-gray-100 flex items-center justify-center h-screen">
+<div class="bg-white rounded-lg shadow-lg p-8 w-full max-w-4xl">
+<h1 class="text-2xl font-bold text-gray-800 mb-6 text-center">Pay by gift card</h1>
+<div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+<div class="border-r border-gray-200 pr-8">
+<div class="flex items-center mb-6">
+<input class="w-full px-4 py-2 border border-gray-300 rounded-l-md focus:outline-none focus:ring-2 focus:ring-blue-500" placeholder="Enter Gift Card Code" type="text" value="GIFT-50-2024"/>
+<button class="bg-gray-200 text-gray-700 px-4 py-2 rounded-r-md hover:bg-gray-300">Apply</button>
+</div>
+<div class="space-y-4 text-gray-600 mb-6">
+<div class="flex justify-between">
+<span>Initial Giftcard Balance</span>
+<span class="font-medium text-gray-800">$50.00</span>
+</div>
+<div class="flex justify-between">
+<span>Bill Amount</span>
+<span class="font-medium text-gray-800">$35.50</span>
+</div>
+<div class="flex justify-between font-semibold border-t border-gray-200 pt-4">
+<span>Amount to Pay by Gift Card</span>
+<span class="text-green-600">-$35.50</span>
+</div>
+</div>
+<div class="bg-blue-50 border-l-4 border-blue-500 p-4 rounded-md mb-6">
+<p class="text-lg font-semibold text-blue-800">Remaining Gift Card Balance</p>
+<p class="text-3xl font-bold text-blue-800">$14.50</p>
+</div>
+<div class="mb-6">
+<label class="block text-sm font-medium text-gray-700 mb-1" for="promo">Discount / Promotion Code</label>
+<div class="flex items-center">
+<input class="w-full px-4 py-2 border border-gray-300 rounded-l-md focus:outline-none focus:ring-2 focus:ring-indigo-500" id="promo" placeholder="Enter code" type="text"/>
+<button class="bg-indigo-500 text-white px-4 py-2 rounded-r-md hover:bg-indigo-600">Apply</button>
+</div>
+</div>
+<div>
+<h3 class="text-lg font-semibold text-gray-700 mb-4">Split Payment</h3>
+<p class="text-sm text-gray-500 mb-4">If the gift card balance is not enough, pay the rest with:</p>
+<div class="flex space-x-4">
+<button class="w-full flex items-center justify-center gap-2 bg-blue-500 text-white py-3 rounded-lg hover:bg-blue-600 transition duration-300">
+<span class="material-symbols-outlined">payments</span>
+                        Pay with Cash
+                    </button>
+<button class="w-full flex items-center justify-center gap-2 bg-green-500 text-white py-3 rounded-lg hover:bg-green-600 transition duration-300">
+<span class="material-symbols-outlined">credit_card</span>
+                        Pay with Card
+                    </button>
+</div>
+</div>
+</div>
+<div>
+<h2 class="text-xl font-semibold text-gray-700 mb-2">Add Customer details</h2>
+<div class="flex items-center mb-6">
+<input class="w-full px-4 py-2 border border-gray-300 rounded-l-md focus:outline-none focus:ring-2 focus:ring-blue-500" placeholder="Add Customer id" type="text"/>
+<button class="bg-gray-200 text-gray-700 px-4 py-2 rounded-r-md hover:bg-gray-300">Add</button>
+</div>
+<h3 class="text-lg font-medium text-gray-700 mb-4">Customer detail form</h3>
+<form class="space-y-4">
+<div class="grid grid-cols-2 gap-4">
+<div>
+<label class="block text-sm font-medium text-gray-700" for="name">Name</label>
+<input class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm" id="name" type="text"/>
+</div>
+<div>
+<label class="block text-sm font-medium text-gray-700" for="cnic">CNIC</label>
+<input class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm" id="cnic" type="text"/>
+</div>
+</div>
+<div class="grid grid-cols-2 gap-4">
+<div>
+<label class="block text-sm font-medium text-gray-700" for="contact">Contact</label>
+<input class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm" id="contact" type="text"/>
+</div>
+<div>
+<label class="block text-sm font-medium text-gray-700" for="city">City</label>
+<input class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm" id="city" type="text"/>
+</div>
+</div>
+<div>
+<label class="block text-sm font-medium text-gray-700" for="address">Address</label>
+<input class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm" id="address" type="text"/>
+</div>
+<div>
+<label class="block text-sm font-medium text-gray-700" for="country">Country</label>
+<input class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm" id="country" type="text"/>
+</div>
+<div class="flex justify-end pt-4">
+<button class="bg-indigo-600 text-white px-6 py-2 rounded-lg hover:bg-indigo-700 transition duration-300" type="submit">Enter</button>
+</div>
+</form>
+</div>
+</div>
+</div>
+
+</body></html>

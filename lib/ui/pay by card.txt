@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>POS Payment</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&amp;display=swap" rel="stylesheet"/>
+<style type="text/tailwindcss">
+        body {
+            font-family: 'Roboto', sans-serif;
+        }
+    </style>
+</head>
+<body class="bg-gray-100 flex items-center justify-center h-screen">
+<div class="bg-white p-8 rounded-2xl shadow-lg w-full max-w-md">
+<div class="flex justify-between items-center mb-6">
+<h1 class="text-2xl font-bold text-gray-800">Pay by Card</h1>
+<div class="text-sm text-gray-500">
+<p>Order #12345</p>
+<p>Date: 24/05/2024</p>
+</div>
+</div>
+<div class="mb-6">
+<label class="block text-sm font-medium text-gray-700 mb-2" for="payment-amount">Payment Amount</label>
+<div class="relative">
+<span class="absolute inset-y-0 left-0 pl-3 flex items-center text-gray-500">$</span>
+<input class="w-full pl-8 pr-4 py-3 border border-gray-300 rounded-md focus:ring-indigo-500 focus:border-indigo-500 text-2xl font-semibold text-gray-900" id="payment-amount" placeholder="0.00" type="text" value="55.00"/>
+</div>
+</div>
+<div class="mb-6">
+<h2 class="text-lg font-medium text-gray-800 mb-4">Select Payment Method</h2>
+<div class="grid grid-cols-3 gap-4 text-center">
+<button class="flex flex-col items-center justify-center bg-gray-100 hover:bg-indigo-100 hover:border-indigo-500 border-2 border-transparent text-gray-800 font-semibold py-3 px-2 rounded-lg transition duration-200">
+<img alt="HBL Logo" class="h-6 mb-1" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCUMpidJIFCnLK4ySq7Lc0POEGhEp-jElGE4ckX0Ex_8Jogfg45lkXzuPAZp0cZkDVj6P3sBJ-bDqic_LMLJwuiT_ugLAEBWOeqM39pqZOmlUuS9aQRwde2pdN3EKHWknYP4AVObr9mWc3j_mDk--vJfISE2DuKYww-IyoNlA-tQXSkjFYxikFvHOL1Yj6_uNdJRWLEf6f8e9yCA12w2diSe9Cl7z64AYxRmuAcXTEZf9v8i6SH2EQW9IEF5V9QGoom81znqWxGDBA"/>
+                    HBL
+                </button>
+<button class="flex flex-col items-center justify-center bg-gray-100 hover:bg-indigo-100 hover:border-indigo-500 border-2 border-transparent text-gray-800 font-semibold py-3 px-2 rounded-lg transition duration-200">
+<img alt="Meezan Bank Logo" class="h-6 mb-1" src="https://lh3.googleusercontent.com/aida-public/AB6AXuA1lcall0cjasaURGP6E6LNOV4GQJ3mmDLbszZ3Wfl4eWbOC9qhv9gmpRRw0y024jCx4PiKgrw8_ZWpYkuSL1oevos5ZICvPyN5-e3Yfluzy_apXoVvkkJ3NfpQurXoMAzAOWMxbKz6eZn04ulU4ENg5VOVk9abrcvkweQ9ZQ_DoQufISCw3SCTxhMWuZJILhW7Ty_AhouKP-rjY2sE9CCNm05RNgotrV3cb9DvrFyvCA6pDf3o6h06dd2RH4FPxWr0t0Ile_JjcQI"/>
+                    Meezan
+                </button>
+<button class="flex flex-col items-center justify-center bg-gray-100 hover:bg-indigo-100 hover:border-indigo-500 border-2 border-transparent text-gray-800 font-semibold py-3 px-2 rounded-lg transition duration-200">
+<img alt="ABL Logo" class="h-6 mb-1" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCkMTnr_cJiGRwPZdoKz4J5lOCi_aUwtGFjBw_NyyLlUIgagTGbObGB1c3PUlEVzogM7pLfuhSnUJnPnqKEj8XFqv3PO2-DuXYtEzTvZ5bVzIHD8WT_MREnL12r0OOnHNK12IEJOBkVJh_55k7Ogw491nkzcpAA005cGBp53j_czvcPF6BmS0kQ3l-4cK9X_4HmoGxjQ-hnSgzQYcyKODaRR_ChaQP7c_EX3e4JhQqjWHYp5kKsQRkqHewcYhFl1RqXI6R4PS7wwzU"/>
+                    ABL
+                </button>
+<button class="flex flex-col items-center justify-center bg-gray-100 hover:bg-indigo-100 hover:border-indigo-500 border-2 border-transparent text-gray-800 font-semibold py-3 px-2 rounded-lg transition duration-200">
+<span class="material-icons mb-1 text-gray-600">credit_card</span>
+                    Credit Card
+                </button>
+<button class="flex flex-col items-center justify-center bg-gray-100 hover:bg-indigo-100 hover:border-indigo-500 border-2 border-transparent text-gray-800 font-semibold py-3 px-2 rounded-lg transition duration-200">
+<span class="material-icons mb-1 text-gray-600">credit_card</span>
+                    Debit Card
+                </button>
+<button class="flex flex-col items-center justify-center bg-gray-100 hover:bg-indigo-100 hover:border-indigo-500 border-2 border-transparent text-gray-800 font-semibold py-3 px-2 rounded-lg transition duration-200">
+<span class="material-icons mb-1 text-gray-600">qr_code_scanner</span>
+                    QR Code
+                </button>
+</div>
+</div>
+<div class="mt-8">
+<button class="w-full flex items-center justify-center bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-4 px-6 rounded-lg transition duration-200 text-lg">
+<span class="material-icons mr-2">payment</span>
+                Proceed to Pay
+            </button>
+<button class="w-full flex items-center justify-center mt-4 bg-gray-200 hover:bg-gray-300 text-gray-800 font-bold py-3 px-6 rounded-lg transition duration-200">
+<span class="material-icons mr-2">add</span>
+                Also Add Cash
+            </button>
+</div>
+</div>
+
+</body></html>

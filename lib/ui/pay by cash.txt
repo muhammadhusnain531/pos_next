@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>POS - Pay by Cash</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet"/>
+<style type="text/tailwindcss">
+        body {
+            font-family: 'Roboto', sans-serif;
+        }
+    </style>
+</head>
+<body class="bg-gray-100 flex items-center justify-center min-h-screen">
+<div class="bg-white rounded-lg shadow-lg p-6 max-w-md w-full">
+<div class="flex justify-between items-center mb-4">
+<h1 class="text-2xl font-bold text-gray-800">Pay by Cash</h1>
+<div class="text-right">
+<p class="text-sm text-gray-500">Order #12345</p>
+<p class="text-sm text-gray-500">Table 5</p>
+</div>
+</div>
+<div class="bg-blue-50 border-l-4 border-blue-500 p-4 rounded-r-lg mb-6">
+<div class="flex justify-between items-center">
+<span class="text-lg font-medium text-blue-800">Total Due</span>
+<span class="text-2xl font-bold text-blue-900">$85.50</span>
+</div>
+</div>
+<div class="bg-gray-50 p-4 rounded-lg mb-6 text-right">
+<div class="text-gray-500 text-sm">Cash Received</div>
+<div class="text-5xl font-semibold text-gray-900 tracking-wider">100.00</div>
+</div>
+<div class="grid grid-cols-4 gap-2 text-center mb-6">
+<button class="bg-gray-200 hover:bg-gray-300 text-gray-800 font-bold py-4 rounded-lg text-2xl transition-colors">7</button>
+<button class="bg-gray-200 hover:bg-gray-300 text-gray-800 font-bold py-4 rounded-lg text-2xl transition-colors">8</button>
+<button class="bg-gray-200 hover:bg-gray-300 text-gray-800 font-bold py-4 rounded-lg text-2xl transition-colors">9</button>
+<button class="bg-red-200 hover:bg-red-300 text-red-800 font-bold py-4 rounded-lg flex items-center justify-center transition-colors">
+<span class="material-icons text-2xl">backspace</span>
+</button>
+<button class="bg-gray-200 hover:bg-gray-300 text-gray-800 font-bold py-4 rounded-lg text-2xl transition-colors">4</button>
+<button class="bg-gray-200 hover:bg-gray-300 text-gray-800 font-bold py-4 rounded-lg text-2xl transition-colors">5</button>
+<button class="bg-gray-200 hover:bg-gray-300 text-gray-800 font-bold py-4 rounded-lg text-2xl transition-colors">6</button>
+<button class="bg-gray-200 hover:bg-gray-300 text-gray-800 font-bold py-4 rounded-lg flex items-center justify-center transition-colors">
+<span class="text-2xl">C</span>
+</button>
+<button class="bg-gray-200 hover:bg-gray-300 text-gray-800 font-bold py-4 rounded-lg text-2xl transition-colors">1</button>
+<button class="bg-gray-200 hover:bg-gray-300 text-gray-800 font-bold py-4 rounded-lg text-2xl transition-colors">2</button>
+<button class="bg-gray-200 hover:bg-gray-300 text-gray-800 font-bold py-4 rounded-lg text-2xl transition-colors">3</button>
+<button class="row-span-2 bg-blue-500 hover:bg-blue-600 text-white font-bold py-4 rounded-lg flex items-center justify-center text-xl transition-colors">
+<span class="material-icons">check_circle</span>
+</button>
+<button class="bg-gray-200 hover:bg-gray-300 text-gray-800 font-bold py-4 rounded-lg text-2xl col-span-2 transition-colors">0</button>
+<button class="bg-gray-200 hover:bg-gray-300 text-gray-800 font-bold py-4 rounded-lg text-2xl transition-colors">.</button>
+</div>
+<div class="bg-green-50 border-l-4 border-green-500 p-4 rounded-r-lg mb-6">
+<div class="flex justify-between items-center">
+<span class="text-lg font-medium text-green-800">Change Due</span>
+<span class="text-2xl font-bold text-green-900">$14.50</span>
+</div>
+</div>
+<div class="flex justify-between items-center mt-6">
+<button class="text-gray-500 hover:text-gray-700 flex items-center transition-colors">
+<span class="material-icons">arrow_back</span>
+<span class="ml-2">Back to Payment</span>
+</button>
+<button class="bg-green-500 hover:bg-green-600 text-white font-bold py-3 px-8 rounded-lg text-lg flex items-center transition-colors">
+<span class="material-icons mr-2">receipt_long</span>
+<span>Finalize &amp; Print Receipt</span>
+</button>
+</div>
+</div>
+
+</body></html>

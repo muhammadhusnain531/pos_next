@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Customer ID Issue</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet"/>
+<style type="text/tailwindcss">
+        body {
+            font-family: 'Roboto', sans-serif;
+        }
+    </style>
+</head>
+<body class="bg-gray-100 flex items-center justify-center min-h-screen">
+<div class="bg-white p-8 rounded-lg shadow-lg w-full max-w-6xl">
+<div class="flex items-center justify-between mb-8">
+<h1 class="text-3xl font-bold text-gray-800">Customer Details</h1>
+<div class="flex items-center space-x-2 text-sm text-gray-500">
+<span class="material-icons text-base">info</span>
+<span>All fields are required.</span>
+</div>
+</div>
+<div class="grid grid-cols-1 md:grid-cols-3 gap-x-12 gap-y-8">
+<div class="space-y-6">
+<h2 class="text-xl font-semibold text-gray-700 border-b pb-2">Personal Information</h2>
+<div>
+<label class="text-sm font-medium text-gray-700" for="customerId">Customer ID</label>
+<input class="mt-1 block w-full px-3 py-2 bg-gray-50 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm" id="customerId" placeholder="e.g., CUST-12345" readonly="" type="text" value="CUST-8807"/>
+<p class="mt-1 text-xs text-gray-500">Auto-generated customer identifier.</p>
+</div>
+<div>
+<label class="text-sm font-medium text-gray-700" for="name">Full Name</label>
+<input class="mt-1 block w-full px-3 py-2 bg-white border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm" id="name" placeholder="Enter customer's full name" type="text"/>
+</div>
+<div>
+<label class="text-sm font-medium text-gray-700" for="cnic">CNIC / Passport No.</label>
+<input class="mt-1 block w-full px-3 py-2 bg-white border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm" id="cnic" placeholder="e.g., 42201-1234567-8" type="text"/>
+</div>
+<div>
+<label class="text-sm font-medium text-gray-700" for="email">Email Address</label>
+<input class="mt-1 block w-full px-3 py-2 bg-white border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm" id="email" placeholder="e.g., name@example.com" type="email"/>
+</div>
+</div>
+<div class="space-y-6">
+<h2 class="text-xl font-semibold text-gray-700 border-b pb-2">Contact &amp; Location</h2>
+<div>
+<label class="text-sm font-medium text-gray-700" for="contact">Primary Contact</label>
+<input class="mt-1 block w-full px-3 py-2 bg-white border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm" id="contact" placeholder="e.g., +92 300 1234567" type="text"/>
+</div>
+<div>
+<label class="text-sm font-medium text-gray-700" for="address">Mailing Address</label>
+<textarea class="mt-1 block w-full px-3 py-2 bg-white border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm" id="address" placeholder="Enter street address, apartment, etc." rows="3"></textarea>
+</div>
+<div>
+<label class="text-sm font-medium text-gray-700" for="city">City</label>
+<input class="mt-1 block w-full px-3 py-2 bg-white border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm" id="city" placeholder="e.g., Karachi" type="text"/>
+</div>
+<div>
+<label class="text-sm font-medium text-gray-700" for="country">Country</label>
+<select class="mt-1 block w-full px-3 py-2 bg-white border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm" id="country">
+<option>Pakistan</option>
+<option>United Arab Emirates</option>
+<option>Saudi Arabia</option>
+<option>United Kingdom</option>
+<option>United States</option>
+</select>
+</div>
+</div>
+<div class="space-y-6">
+<h2 class="text-xl font-semibold text-gray-700 border-b pb-2">Account Details</h2>
+<div>
+<label class="text-sm font-medium text-gray-700" for="shop">Associated Shop/Branch</label>
+<input class="mt-1 block w-full px-3 py-2 bg-white border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm" id="shop" placeholder="e.g., Main Branch" type="text"/>
+</div>
+<div>
+<label class="text-sm font-medium text-gray-700" for="customer-type">Customer Type</label>
+<select class="mt-1 block w-full px-3 py-2 bg-white border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm" id="customer-type">
+<option>Regular</option>
+<option>Premium</option>
+<option>Wholesale</option>
+<option>Corporate</option>
+</select>
+</div>
+<div>
+<label class="text-sm font-medium text-gray-700" for="status">Account Status</label>
+<div class="mt-2 flex items-center">
+<input checked="" class="h-4 w-4 text-indigo-600 focus:ring-indigo-500 border-gray-300 rounded" id="status" type="checkbox"/>
+<label class="ml-2 block text-sm text-gray-900" for="status">Active</label>
+</div>
+<p class="mt-1 text-xs text-gray-500">Uncheck to deactivate the customer's account.</p>
+</div>
+</div>
+</div>
+<div class="mt-10 pt-6 border-t border-gray-200 flex justify-end space-x-4">
+<button class="inline-flex items-center px-6 py-3 border border-gray-300 text-base font-medium rounded-md shadow-sm text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500" type="button">
+<span class="material-icons mr-2">cancel</span>
+                Cancel
+        </button>
+<button class="inline-flex items-center px-6 py-3 border border-transparent text-base font-medium rounded-md shadow-sm text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500" type="button">
+<span class="material-icons mr-2">save</span>
+            Save Changes
+        </button>
+</div>
+</div>
+
+</body></html>
