@@ -57,7 +57,17 @@ class MainSaleScreen extends StatelessWidget {
                   color: Colors.white,
                   borderRadius: BorderRadius.circular(8),
                 ),
-                child:  ActionButtonsGrid(),
+                child:  Expanded(
+                  flex: 1,
+                  child: Container(
+                    padding: const EdgeInsets.all(16),
+                    decoration: BoxDecoration(
+                      color: Colors.white,
+                      borderRadius: BorderRadius.circular(8),
+                    ),
+                    child: const ActionButtonsGrid(),
+                  ),
+                ),
               ),
             ),
           ],

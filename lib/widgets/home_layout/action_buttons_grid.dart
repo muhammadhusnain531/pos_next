@@ -1,67 +1,79 @@
 import 'package:flutter/material.dart';
+import '../../screns/payment_screens/card_payment_screen.dart';
+import '../../screns/payment_screens/cash_payment_screen.dart';
+import '../../screns/payment_screens/gift_card_screen.dart';
 
 class ActionButtonsGrid extends StatelessWidget {
   const ActionButtonsGrid({Key? key}) : super(key: key);
 
+  void _openScreen(BuildContext context, Widget screen) {
+    Navigator.push(
+      context,
+      MaterialPageRoute(builder: (_) => screen),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
-    // Same labels & colors as your original design
-    final items = <_ActionItem>[
-      _ActionItem("Pay Cash", Colors.blue),
-      _ActionItem("Pay Card", Colors.blue), // (was blue[700], simplified to const)
-      _ActionItem("Gift Card", Colors.green),
-      _ActionItem("Discount", Colors.orange),
-      _ActionItem("Stock Details", Colors.grey),
-      _ActionItem("Day/Opening Closing", Colors.grey),
-      _ActionItem("Return", Colors.red),
-      _ActionItem("Home Delay", Colors.black87),
-      _ActionItem("Issue Gift Card", Colors.green),
-      _ActionItem("Void Product", Colors.red),
-      _ActionItem("Void Payment", Colors.red),
-      _ActionItem("Clean Screen", Colors.purple),
-      _ActionItem("Customer Details", Colors.indigo),
-      _ActionItem("Reports", Colors.black87),
-    ];
-
     return GridView.count(
       crossAxisCount: 3,
       mainAxisSpacing: 8,
       crossAxisSpacing: 8,
-      childAspectRatio: 1.5,
-      children: items
-          .map((i) => _PosButton(label: i.label, color: i.color, onTap: () {}))
-          .toList(),
+      children: [
+        PosButton(
+          label: "Pay Cash",
+          color: Colors.blue,
+          onTap: () => _openScreen(context, const CashPaymentScreen()),
+        ),
+        PosButton(
+          label: "Pay Card",
+          color: Colors.blue[700]!,
+          onTap: () => _openScreen(context, const CardPaymentScreen()),
+        ),
+        PosButton(
+          label: "Gift Card",
+          color: Colors.green,
+          onTap: () => _openScreen(context, const GiftCardScreen()),
+        ),
+        PosButton(label: "Discount", color: Colors.orange),
+        PosButton(label: "Stock Details", color: Colors.grey),
+        PosButton(label: "Day/Opening Closing", color: Colors.grey[700]!),
+        PosButton(label: "Return", color: Colors.red[300]!),
+        PosButton(label: "Home Delay", color: Colors.grey[800]!),
+        PosButton(label: "Issue Gift Card", color: Colors.green[700]!),
+        PosButton(label: "Void Product", color: Colors.red),
+        PosButton(label: "Void Payment", color: Colors.red[800]!),
+        PosButton(label: "Clean Screen", color: Colors.purple),
+        PosButton(label: "Customer Details", color: Colors.indigo),
+        PosButton(label: "Reports", color: Colors.black87),
+      ],
     );
   }
 }
 
-class _ActionItem {
+class PosButton extends StatelessWidget {
   final String label;
   final Color color;
-  const _ActionItem(this.label, this.color);
-}
+  final VoidCallback? onTap;
 
-class _PosButton extends StatelessWidget {
-  final String label;
-  final Color color;
-  final VoidCallback onTap;
-
-  const _PosButton({
+  const PosButton({
     Key? key,
     required this.label,
     required this.color,
-    required this.onTap,
+    this.onTap,
   }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return ElevatedButton(
-      onPressed: onTap,
       style: ElevatedButton.styleFrom(
         backgroundColor: color,
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(8),
+        ),
         padding: const EdgeInsets.all(12),
       ),
+      onPressed: onTap,
       child: Text(
         label,
         textAlign: TextAlign.center,
