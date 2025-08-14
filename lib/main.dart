@@ -1,4 +1,29 @@
 import 'package:flutter/material.dart';
+import 'package:posnext/screns/main_sale_screen.dart';
+
+void main() {
+  runApp(const MyApp());
+}
+
+class MyApp extends StatelessWidget {
+  const MyApp({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return MaterialApp(
+      home: MainSaleScreen(),
+    );
+  }
+}
+
+
+
+
+
+
+
+/*
+import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:flutter/services.dart';
 
@@ -295,4 +320,4 @@ class AppUtils {
   static String formatDateTime(DateTime dateTime) {
     return '${dateTime.year}-${dateTime.month.toString().padLeft(2, '0')}-${dateTime.day.toString().padLeft(2, '0')} ${dateTime.hour.toString().padLeft(2, '0')}:${dateTime.minute.toString().padLeft(2, '0')}';
   }
-}
+}*/
