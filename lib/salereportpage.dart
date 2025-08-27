@@ -1,18 +1,5 @@
 import 'package:flutter/material.dart';
 
-void main() => runApp(MyApp());
-
-class MyApp extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return MaterialApp(
-      title: 'Live PDF Viewer',
-      theme: ThemeData(primarySwatch: Colors.blue),
-      home: SaleReportPage(),
-      debugShowCheckedModeBanner: false,
-    );
-  }
-}
 
 class SaleReportPage extends StatelessWidget {
   const SaleReportPage({Key? key}) : super(key: key);
