@@ -1,9 +1,79 @@
 import 'package:flutter/material.dart';
 
+class PayByCashPage extends StatefulWidget {
+  final double totalDue;
 
-class PayByCashPage extends StatelessWidget {
-  const PayByCashPage({Key? key}) : super(key: key);
+  // Defaulting to 85.50 if not passed, just for demo consistency
+  const PayByCashPage({Key? key, this.totalDue = 85.50}) : super(key: key);
 
+  @override
+  State<PayByCashPage> createState() => _PayByCashPageState();
+}
+
+class _PayByCashPageState extends State<PayByCashPage> {
+  String _inputAmount = "";
+
+  double get cashReceived => double.tryParse(_inputAmount) ?? 0.0;
+  double get changeDue {
+    double due = cashReceived - widget.totalDue;
+    return due < 0 ? 0.0 : due;
+  }
+
+  void _onKeypadTap(String value) {
+    setState(() {
+      if (value == 'C') {
+        // Clear input
+        _inputAmount = "";
+      } else if (value == 'BACKSPACE') {
+        // Backspace
+        if (_inputAmount.isNotEmpty) {
+          _inputAmount = _inputAmount.substring(0, _inputAmount.length - 1);
+        }
+      } else if (value == 'ENTER') {
+        _handleFinalize();
+      } else {
+        // Handle digits and decimal
+        if (value == '.' && _inputAmount.contains('.')) return;
+        // Prevent excessive length
+        if (_inputAmount.length > 9) return;
+        // Handle leading zero if needed, but simple string concat works fine for basic POS
+        _inputAmount += value;
+      }
+    });
+  }
+
+  void _handleFinalize() {
+    if (cashReceived >= widget.totalDue) {
+      // Success
+      showDialog(
+        context: context,
+        builder: (ctx) => AlertDialog(
+          title: const Text("Payment Successful"),
+          content: Text("Change Due: \$${changeDue.toStringAsFixed(2)}"),
+          actions: [
+            TextButton(
+              onPressed: () {
+                Navigator.of(ctx).pop(); // Close dialog
+                Navigator.of(context).pop(); // Go back to main screen
+              },
+              child: const Text("OK"),
+            )
+          ],
+        ),
+      );
+    } else {
+      // Insufficient funds
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text(
+              "Insufficient Cash. Need \$${(widget.totalDue - cashReceived).toStringAsFixed(2)} more."),
+          backgroundColor: Colors.red,
+        ),
+      );
+    }
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: const Color(0xFFF5F6FA),
@@ -71,8 +141,8 @@ class PayByCashPage extends StatelessWidget {
                 ),
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: const [
-                    Text(
+                  children: [
+                    const Text(
                       'Total Due',
                       style: TextStyle(
                         color: Color(0xFF3578F6),
@@ -81,8 +151,8 @@ class PayByCashPage extends StatelessWidget {
                       ),
                     ),
                     Text(
-                      '\$85.50',
-                      style: TextStyle(
+                      '\$${widget.totalDue.toStringAsFixed(2)}',
+                      style: const TextStyle(
                         color: Color(0xFF3578F6),
                         fontWeight: FontWeight.bold,
                         fontSize: 22,
@@ -111,10 +181,13 @@ class PayByCashPage extends StatelessWidget {
                     decoration: BoxDecoration(
                       color: const Color(0xFFF4F6F8),
                       borderRadius: BorderRadius.circular(8),
+                      border: Border.all(
+                        color: Colors.grey.withOpacity(0.3),
+                      ),
                     ),
-                    child: const Text(
-                      '100.00',
-                      style: TextStyle(
+                    child: Text(
+                      _inputAmount.isEmpty ? "0.00" : _inputAmount,
+                      style: const TextStyle(
                         fontWeight: FontWeight.bold,
                         fontSize: 38,
                         letterSpacing: 2,
@@ -125,7 +198,7 @@ class PayByCashPage extends StatelessWidget {
               ),
               const SizedBox(height: 24),
               // Keypad
-              _CustomKeypad(),
+              _CustomKeypad(onTap: _onKeypadTap),
               const SizedBox(height: 24),
               // Change Due
               Container(
@@ -138,8 +211,8 @@ class PayByCashPage extends StatelessWidget {
                 ),
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: const [
-                    Text(
+                  children: [
+                    const Text(
                       'Change Due',
                       style: TextStyle(
                         color: Color(0xFF20B15A),
@@ -148,8 +221,8 @@ class PayByCashPage extends StatelessWidget {
                       ),
                     ),
                     Text(
-                      '\$14.50',
-                      style: TextStyle(
+                      '\$${changeDue.toStringAsFixed(2)}',
+                      style: const TextStyle(
                         color: Color(0xFF20B15A),
                         fontWeight: FontWeight.bold,
                         fontSize: 22,
@@ -164,7 +237,7 @@ class PayByCashPage extends StatelessWidget {
                 children: [
                   Expanded(
                     child: TextButton.icon(
-                      onPressed: () {},
+                      onPressed: () => Navigator.pop(context),
                       icon: const Icon(Icons.arrow_back, color: Colors.grey),
                       label: const Text(
                         'Back to Payment',
@@ -175,7 +248,7 @@ class PayByCashPage extends StatelessWidget {
                   const SizedBox(width: 12),
                   Expanded(
                     child: ElevatedButton.icon(
-                      onPressed: () {},
+                      onPressed: _handleFinalize,
                       icon: const Icon(Icons.receipt_long),
                       label: const Text(
                         'Finalize & Print\nReceipt',
@@ -202,7 +275,9 @@ class PayByCashPage extends StatelessWidget {
 }
 
 class _CustomKeypad extends StatelessWidget {
-  const _CustomKeypad({Key? key}) : super(key: key);
+  final Function(String) onTap;
+
+  const _CustomKeypad({Key? key, required this.onTap}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -212,22 +287,25 @@ class _CustomKeypad extends StatelessWidget {
     );
     final textStyle = const TextStyle(fontSize: 24, fontWeight: FontWeight.w600);
 
-    Widget buildButton(String text, {Color? bgColor, Color? fgColor, IconData? icon}) {
+    Widget buildButton(String value, {String? label, Color? bgColor, Color? fgColor, IconData? icon}) {
       return Expanded(
-        child: Container(
-          margin: const EdgeInsets.all(6),
-          decoration: BoxDecoration(
-            color: bgColor ?? const Color(0xFFF4F6F8),
-            borderRadius: BorderRadius.circular(10),
-          ),
-          height: 56,
-          child: Center(
-            child: icon == null
-                ? Text(
-              text,
-              style: textStyle.copyWith(color: fgColor ?? Colors.black),
-            )
-                : Icon(icon, color: fgColor ?? Colors.black, size: 26),
+        child: GestureDetector(
+          onTap: () => onTap(value),
+          child: Container(
+            margin: const EdgeInsets.all(6),
+            decoration: BoxDecoration(
+              color: bgColor ?? const Color(0xFFF4F6F8),
+              borderRadius: BorderRadius.circular(10),
+            ),
+            height: 56,
+            child: Center(
+              child: icon == null
+                  ? Text(
+                      label ?? value,
+                      style: textStyle.copyWith(color: fgColor ?? Colors.black),
+                    )
+                  : Icon(icon, color: fgColor ?? Colors.black, size: 26),
+            ),
           ),
         ),
       );
@@ -240,7 +318,7 @@ class _CustomKeypad extends StatelessWidget {
             buildButton('7'),
             buildButton('8'),
             buildButton('9'),
-            buildButton('', bgColor: const Color(0xFFFEE4E2), icon: Icons.close, fgColor: Colors.red),
+            buildButton('BACKSPACE', bgColor: const Color(0xFFFEE4E2), icon: Icons.backspace_outlined, fgColor: Colors.red),
           ],
         ),
         Row(
@@ -256,7 +334,7 @@ class _CustomKeypad extends StatelessWidget {
             buildButton('1'),
             buildButton('2'),
             buildButton('3'),
-            buildButton('', bgColor: const Color(0xFF3578F6), icon: Icons.check, fgColor: Colors.white),
+            buildButton('ENTER', bgColor: const Color(0xFF3578F6), icon: Icons.check, fgColor: Colors.white),
           ],
         ),
         Row(

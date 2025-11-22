@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:posnext/screns/main_sale_screen.dart';
+import 'package:posnext/screens/main_screen.dart';
 
 import 'addproductscreen.dart';
 import 'customerdetailsscreen.dart';
@@ -15,7 +15,7 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      home: GiftCardScreen(),
+      home: MainSaleScreen(),
     );
   }
 }

@@ -1,4 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:posnext/paybycashpage.dart';
+import 'package:posnext/paybycardpage.dart';
+import 'package:posnext/giftcardscreen.dart';
+import 'package:posnext/homedeliverypage.dart';
+import 'package:posnext/salereportpage.dart';
+import 'package:posnext/stockdetailspage.dart';
+import 'package:posnext/addproductscreen.dart';
+import 'package:posnext/customerdetailsscreen.dart';
 
 class MainSaleScreen extends StatelessWidget {
   const MainSaleScreen({super.key});
@@ -45,7 +53,29 @@ class MainSaleScreen extends StatelessWidget {
                         ),
                       ],
                     ),
-                    const SizedBox(height: 12),
+                    
+                    const SizedBox(height: 16),
+                    
+                    /// Search / Barcode Input
+                    TextField(
+                      decoration: InputDecoration(
+                        hintText: "Enter Barcode / Product Name",
+                        prefixIcon: const Icon(Icons.qr_code_scanner),
+                        suffixIcon: const Icon(Icons.search),
+                        filled: true,
+                        fillColor: Colors.grey[100],
+                        border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(8),
+                          borderSide: BorderSide.none,
+                        ),
+                        contentPadding: const EdgeInsets.symmetric(vertical: 14, horizontal: 16),
+                      ),
+                      onSubmitted: (value) {
+                        // TODO: Implement search logic
+                      },
+                    ),
+                    
+                    const SizedBox(height: 16),
 
                     const Divider(),
 
@@ -118,20 +148,82 @@ class MainSaleScreen extends StatelessWidget {
                   mainAxisSpacing: 8,
                   crossAxisSpacing: 8,
                   children: [
-                    PosButton(label: "Pay Cash", color: Colors.blue),
-                    PosButton(label: "Pay Card", color: Colors.blue[700]!),
-                    PosButton(label: "Gift Card", color: Colors.green),
-                    PosButton(label: "Discount", color: Colors.orange),
-                    PosButton(label: "Stock Details", color: Colors.grey),
-                    PosButton(label: "Day/Opening Closing", color: Colors.grey[700]!),
-                    PosButton(label: "Return", color: Colors.red[300]!),
-                    PosButton(label: "Home Delay", color: Colors.grey[800]!),
-                    PosButton(label: "Issue Gift Card", color: Colors.green[700]!),
-                    PosButton(label: "Void Product", color: Colors.red),
-                    PosButton(label: "Void Payment", color: Colors.red[800]!),
-                    PosButton(label: "Clean Screen", color: Colors.purple),
-                    PosButton(label: "Customer Details", color: Colors.indigo),
-                    PosButton(label: "Reports", color: Colors.black87),
+                    PosButton(
+                      label: "Pay Cash", 
+                      color: Colors.blue,
+                      onTap: () => Navigator.push(context, MaterialPageRoute(builder: (context) => const PayByCashPage())),
+                    ),
+                    PosButton(
+                      label: "Pay Card", 
+                      color: Colors.blue[700]!,
+                      onTap: () => Navigator.push(context, MaterialPageRoute(builder: (context) => const PayByCardPage())),
+                    ),
+                    PosButton(
+                      label: "Gift Card", 
+                      color: Colors.green,
+                      onTap: () => Navigator.push(context, MaterialPageRoute(builder: (context) => const GiftCardScreen())),
+                    ),
+                    PosButton(
+                      label: "Discount", 
+                      color: Colors.orange,
+                      // TODO: Create Discount Page
+                      onTap: () {}, 
+                    ),
+                    PosButton(
+                      label: "Stock Details", 
+                      color: Colors.grey,
+                      onTap: () => Navigator.push(context, MaterialPageRoute(builder: (context) => const StockDetailsPage())),
+                    ),
+                    PosButton(
+                      label: "Day/Opening Closing", 
+                      color: Colors.grey[700]!,
+                      // TODO: Create Day Opening/Closing Page
+                      onTap: () {}, 
+                    ),
+                    PosButton(
+                      label: "Return", 
+                      color: Colors.red[300]!,
+                      // TODO: Create Return Page
+                      onTap: () {}, 
+                    ),
+                    PosButton(
+                      label: "Home Delivery", 
+                      color: Colors.grey[800]!,
+                      onTap: () => Navigator.push(context, MaterialPageRoute(builder: (context) => const HomeDeliveryPage())),
+                    ),
+                    PosButton(
+                      label: "Issue Gift Card", 
+                      color: Colors.green[700]!,
+                      onTap: () => Navigator.push(context, MaterialPageRoute(builder: (context) => const GiftCardScreen())), // Reusing GiftCardScreen for now
+                    ),
+                    PosButton(
+                      label: "Void Product", 
+                      color: Colors.red,
+                      // TODO: Create Void Product Logic/Page
+                      onTap: () {}, 
+                    ),
+                    PosButton(
+                      label: "Void Payment", 
+                      color: Colors.red[800]!,
+                      // TODO: Create Void Payment Logic/Page
+                      onTap: () {}, 
+                    ),
+                    PosButton(
+                      label: "Clean Screen", 
+                      color: Colors.purple,
+                      // TODO: Create Clean Screen Logic
+                      onTap: () {}, 
+                    ),
+                    PosButton(
+                      label: "Customer Details", 
+                      color: Colors.indigo,
+                      onTap: () => Navigator.push(context, MaterialPageRoute(builder: (context) => const CustomerDetailsScreen())),
+                    ),
+                    PosButton(
+                      label: "Reports", 
+                      color: Colors.black87,
+                      onTap: () => Navigator.push(context, MaterialPageRoute(builder: (context) => const SaleReportPage())),
+                    ),
                   ],
                 ),
               ),
@@ -183,8 +275,14 @@ class SummaryRow extends StatelessWidget {
 class PosButton extends StatelessWidget {
   final String label;
   final Color color;
+  final VoidCallback? onTap;
 
-  const PosButton({super.key, required this.label, required this.color});
+  const PosButton({
+    super.key, 
+    required this.label, 
+    required this.color,
+    this.onTap,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -196,7 +294,7 @@ class PosButton extends StatelessWidget {
         ),
         padding: const EdgeInsets.all(12),
       ),
-      onPressed: () {},
+      onPressed: onTap ?? () {},
       child: Text(
         label,
         textAlign: TextAlign.center,

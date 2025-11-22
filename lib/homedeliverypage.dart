@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:posnext/paybycashpage.dart';
+import 'package:posnext/paybycardpage.dart';
 
 class HomeDeliveryPage extends StatelessWidget {
   const HomeDeliveryPage({Key? key}) : super(key: key);
@@ -275,7 +277,13 @@ class HomeDeliveryPage extends StatelessWidget {
                                       borderRadius: BorderRadius.circular(10),
                                     ),
                                   ),
-                                  onPressed: () {},
+                                  onPressed: () {
+                                    Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                          builder: (context) => const PayByCashPage()),
+                                    );
+                                  },
                                 ),
                               ),
                               const SizedBox(width: 16),
@@ -293,7 +301,13 @@ class HomeDeliveryPage extends StatelessWidget {
                                     ),
                                     backgroundColor: Color(0xFFF4F6F8),
                                   ),
-                                  onPressed: () {},
+                                  onPressed: () {
+                                    Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                          builder: (context) => const PayByCardPage()),
+                                    );
+                                  },
                                 ),
                               ),
                             ],
@@ -317,7 +331,18 @@ class HomeDeliveryPage extends StatelessWidget {
                                   borderRadius: BorderRadius.circular(10),
                                 ),
                               ),
-                              onPressed: () {},
+                              onPressed: () {
+                                // You can also choose to navigate to one of the payment pages
+                                // or a separate confirmation page here.
+                                // For now, let's assume it goes to Cash payment by default or
+                                // handles order placement directly.
+                                // Example:
+                                Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                      builder: (context) => const PayByCashPage()),
+                                );
+                              },
                             ),
                           ),
                         ],
