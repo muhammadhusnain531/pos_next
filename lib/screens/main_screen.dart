@@ -22,9 +22,28 @@ class _MainSaleScreenState extends State<MainSaleScreen> {
   // Cart State
   final List<Map<String, dynamic>> _cart = [];
   final TextEditingController _searchController = TextEditingController();
+  
+  // Transaction State
+  String _invoiceId = "";
+  int? _selectedRowIndex;
+  double _discountPercentage = 0.0;
+
+  @override
+  void initState() {
+    super.initState();
+    _generateInvoiceId();
+  }
+
+  void _generateInvoiceId() {
+    setState(() {
+      _invoiceId = "INV-${DateTime.now().millisecondsSinceEpoch.toString().substring(5)}";
+    });
+  }
 
   // Computed Properties
-  double get _totalAmount => _cart.fold(0.0, (sum, item) => sum + (item['price'] * item['qty']));
+  double get _subTotal => _cart.fold(0.0, (sum, item) => sum + (item['price'] * item['qty']));
+  double get _discountAmount => _subTotal * (_discountPercentage / 100);
+  double get _totalAmount => _subTotal - _discountAmount;
   int get _totalItems => _cart.fold(0, (sum, item) => sum + (item['qty'] as int));
 
   void _addToCart(Product product) {
@@ -61,16 +80,89 @@ class _MainSaleScreenState extends State<MainSaleScreen> {
     _searchController.clear();
   }
 
+  void _updateQuantity(int index, int change) {
+    setState(() {
+      final item = _cart[index];
+      int newQty = item['qty'] + change;
+      
+      if (newQty < 1) return; // Minimum 1
+      
+      // Check stock (optional, requires passing product or storing max qty in cart)
+      // For now, assuming we can check against a stored 'maxQty' if we add it to cart map
+      
+      _cart[index]['qty'] = newQty;
+      _cart[index]['amount'] = newQty * item['price'];
+    });
+  }
+
   void _removeFromCart(int index) {
     setState(() {
       _cart.removeAt(index);
+      if (_selectedRowIndex == index) {
+        _selectedRowIndex = null;
+      } else if (_selectedRowIndex != null && _selectedRowIndex! > index) {
+        _selectedRowIndex = _selectedRowIndex! - 1;
+      }
     });
+  }
+
+  void _voidProduct() {
+    if (_selectedRowIndex != null) {
+      _removeFromCart(_selectedRowIndex!);
+      setState(() {
+        _selectedRowIndex = null;
+      });
+    } else {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text("Please select a product to void"), duration: Duration(seconds: 1)),
+      );
+    }
   }
 
   void _clearCart() {
     setState(() {
       _cart.clear();
+      _discountPercentage = 0.0;
+      _selectedRowIndex = null;
+      _generateInvoiceId(); // New Invoice ID for next customer
     });
+  }
+
+  void _showDiscountDialog() {
+    final TextEditingController discountController = TextEditingController();
+    showDialog(
+      context: context,
+      builder: (ctx) => AlertDialog(
+        title: const Text("Apply Discount"),
+        content: TextField(
+          controller: discountController,
+          keyboardType: TextInputType.number,
+          decoration: const InputDecoration(
+            labelText: "Discount Percentage (%)",
+            hintText: "e.g. 10",
+            border: OutlineInputBorder(),
+          ),
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(ctx),
+            child: const Text("Cancel"),
+          ),
+          ElevatedButton(
+            onPressed: () {
+              final val = double.tryParse(discountController.text);
+              if (val != null && val >= 0 && val <= 100) {
+                setState(() {
+                  _discountPercentage = val;
+                });
+                Navigator.pop(ctx);
+              }
+            },
+            child: const Text("Apply"),
+          ),
+        ],
+      ),
+    );
   }
 
   Future<void> _handleSearch(String query, AppDatabase db) async {
@@ -152,8 +244,9 @@ class _MainSaleScreenState extends State<MainSaleScreen> {
       // Save to DB
       final saleId = await db.createSale(
         SalesCompanion(
-          invoiceNumber: drift.Value("INV-${DateTime.now().millisecondsSinceEpoch}"),
+          invoiceNumber: drift.Value(_invoiceId),
           totalAmount: drift.Value(_totalAmount),
+          discount: drift.Value(_discountAmount),
           paymentMethod: drift.Value(method),
           date: drift.Value(DateTime.now()),
         ),
@@ -209,8 +302,8 @@ class _MainSaleScreenState extends State<MainSaleScreen> {
                         Column(
                           crossAxisAlignment: CrossAxisAlignment.end,
                           children: [
-                            Text("Invoice: #${DateTime.now().millisecondsSinceEpoch.toString().substring(8)}",
-                                style: const TextStyle(fontSize: 14)),
+                            Text("Invoice: #$_invoiceId",
+                                style: const TextStyle(fontSize: 14, fontWeight: FontWeight.bold)),
                             Text("Date: ${DateTime.now().toString().split(' ')[0]}",
                                 style: const TextStyle(fontSize: 14)),
                           ],
@@ -271,21 +364,54 @@ class _MainSaleScreenState extends State<MainSaleScreen> {
                             separatorBuilder: (_, __) => const Divider(height: 1),
                             itemBuilder: (ctx, index) {
                               final item = _cart[index];
-                              return Padding(
-                                padding: const EdgeInsets.symmetric(vertical: 8.0),
-                                child: Row(
-                                  children: [
-                                    Expanded(flex: 2, child: Text(item['barcode'], overflow: TextOverflow.ellipsis)),
-                                    Expanded(flex: 4, child: Text(item['name'], overflow: TextOverflow.ellipsis)),
-                                    Expanded(child: Text(item['price'].toString())),
-                                    // Expanded(child: Text("0.00")), // Tax placeholder
-                                    Expanded(child: Text(item['qty'].toString())),
-                                    Expanded(child: Text(item['amount'].toStringAsFixed(2))),
-                                    IconButton(
-                                      icon: const Icon(Icons.delete, color: Colors.red, size: 20),
-                                      onPressed: () => _removeFromCart(index),
-                                    )
-                                  ],
+                              final isSelected = _selectedRowIndex == index;
+                              return InkWell(
+                                onTap: () {
+                                  setState(() {
+                                    _selectedRowIndex = index;
+                                  });
+                                },
+                                child: Container(
+                                  color: isSelected ? Colors.blue.withOpacity(0.1) : null,
+                                  padding: const EdgeInsets.symmetric(vertical: 8.0, horizontal: 4.0),
+                                  child: Row(
+                                    children: [
+                                      Expanded(flex: 2, child: Text(item['barcode'], overflow: TextOverflow.ellipsis)),
+                                      Expanded(flex: 4, child: Text(item['name'], overflow: TextOverflow.ellipsis)),
+                                      Expanded(child: Text(item['price'].toString())),
+                                      
+                                      // Quantity with Buttons
+                                      Expanded(
+                                        flex: 2,
+                                        child: Row(
+                                          children: [
+                                            IconButton(
+                                              icon: const Icon(Icons.remove_circle_outline, size: 20, color: Colors.grey),
+                                              onPressed: () => _updateQuantity(index, -1),
+                                              padding: EdgeInsets.zero,
+                                              constraints: const BoxConstraints(),
+                                            ),
+                                            Padding(
+                                              padding: const EdgeInsets.symmetric(horizontal: 8.0),
+                                              child: Text(item['qty'].toString(), style: const TextStyle(fontWeight: FontWeight.bold)),
+                                            ),
+                                            IconButton(
+                                              icon: const Icon(Icons.add_circle_outline, size: 20, color: Colors.blue),
+                                              onPressed: () => _updateQuantity(index, 1),
+                                              padding: EdgeInsets.zero,
+                                              constraints: const BoxConstraints(),
+                                            ),
+                                          ],
+                                        ),
+                                      ),
+                                      
+                                      Expanded(child: Text(item['amount'].toStringAsFixed(2))),
+                                      IconButton(
+                                        icon: const Icon(Icons.delete, color: Colors.red, size: 20),
+                                        onPressed: () => _removeFromCart(index),
+                                      )
+                                    ],
+                                  ),
                                 ),
                               );
                             },
@@ -299,10 +425,10 @@ class _MainSaleScreenState extends State<MainSaleScreen> {
                       crossAxisAlignment: CrossAxisAlignment.end,
                       children: [
                         SummaryRow(label: "Number of items:", value: "$_totalItems"),
-                        SummaryRow(label: "Amount:", value: _totalAmount.toStringAsFixed(2)),
-                        const SummaryRow(
-                            label: "Discount:",
-                            value: "- 0.00",
+                        SummaryRow(label: "Amount:", value: _subTotal.toStringAsFixed(2)),
+                        SummaryRow(
+                            label: "Discount (${_discountPercentage.toStringAsFixed(0)}%):",
+                            value: "- ${_discountAmount.toStringAsFixed(2)}",
                             valueColor: Colors.red),
                         SummaryRow(
                           label: "Total:",
@@ -355,7 +481,7 @@ class _MainSaleScreenState extends State<MainSaleScreen> {
                     PosButton(
                       label: "Discount", 
                       color: Colors.orange,
-                      onTap: () {}, 
+                      onTap: _showDiscountDialog, 
                     ),
                     PosButton(
                       label: "Stock Details", 
@@ -385,7 +511,7 @@ class _MainSaleScreenState extends State<MainSaleScreen> {
                     PosButton(
                       label: "Void Product", 
                       color: Colors.red,
-                      onTap: () {}, 
+                      onTap: _voidProduct, 
                     ),
                     PosButton(
                       label: "Void Payment", 
