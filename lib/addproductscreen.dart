@@ -1,12 +1,112 @@
+import 'package:drift/drift.dart' hide Column;
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import 'package:posnext/services/database_service.dart';
 
-class AddProductScreen extends StatelessWidget {
+class AddProductScreen extends StatefulWidget {
   const AddProductScreen({super.key});
+
+  @override
+  State<AddProductScreen> createState() => _AddProductScreenState();
+}
+
+class _AddProductScreenState extends State<AddProductScreen> {
+  final _barcodeController = TextEditingController();
+  final _nameController = TextEditingController();
+  final _descriptionController = TextEditingController();
+  final _quantityController = TextEditingController();
+  final _priceController = TextEditingController();
+
+  @override
+  void dispose() {
+    _barcodeController.dispose();
+    _nameController.dispose();
+    _descriptionController.dispose();
+    _quantityController.dispose();
+    _priceController.dispose();
+    super.dispose();
+  }
+
+  Future<void> _saveProduct() async {
+    final db = Provider.of<AppDatabase>(context, listen: false);
+
+    // Validation
+    if (_nameController.text.isEmpty ||
+        _barcodeController.text.isEmpty ||
+        _priceController.text.isEmpty ||
+        _quantityController.text.isEmpty) {
+      if (!mounted) return;
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text("Please fill all required fields.")),
+      );
+      return;
+    }
+
+    try {
+      // Check for duplicate barcode
+      final existingProduct = await db.getProductByBarcode(_barcodeController.text);
+      if (existingProduct != null) {
+        if (!mounted) return;
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+            content: Text("Product with this barcode already exists!"),
+            backgroundColor: Colors.red,
+          ),
+        );
+        return;
+      }
+
+      // Create new product
+      final newProduct = ProductsCompanion(
+        name: Value(_nameController.text),
+        barcode: Value(_barcodeController.text),
+       // description: Value(_descriptionController.text.isNotEmpty ? _descriptionController.text : ''),
+        price: Value(double.tryParse(_priceController.text) ?? 0.0),
+        quantity: Value(int.tryParse(_quantityController.text) ?? 0),
+      );
+
+      await db.addProduct(newProduct);
+
+      if (!mounted) return;
+
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text("Product Saved Successfully!"),
+          backgroundColor: Colors.green,
+        ),
+      );
+
+      // Clear form
+      _nameController.clear();
+      _barcodeController.clear();
+      _priceController.clear();
+      _quantityController.clear();
+      _descriptionController.clear();
+    } catch (e, stackTrace) {
+      debugPrint("Error saving product: $e");
+      debugPrint(stackTrace.toString());
+      if (!mounted) return;
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text("Error saving product: $e"),
+          backgroundColor: Colors.red,
+          duration: const Duration(seconds: 3),
+        ),
+      );
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: const Color(0xFFF5F6FA),
+      appBar: AppBar(
+        title: const Text("Add Product"),
+        leading: IconButton(
+          icon: const Icon(Icons.arrow_back),
+          onPressed: () => Navigator.pop(context),
+        ),
+      ),
       body: Center(
         child: Container(
           width: 900,
@@ -14,147 +114,43 @@ class AddProductScreen extends StatelessWidget {
           decoration: BoxDecoration(
             color: Colors.white,
             borderRadius: BorderRadius.circular(12),
-            boxShadow: [
-              BoxShadow(
-                color: Colors.black.withOpacity(0.05),
-                blurRadius: 10,
-                offset: const Offset(0, 4),
-              ),
-            ],
           ),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: [
-              const Text(
-                "Add Product in System",
-                style: TextStyle(
-                  fontSize: 20,
-                  fontWeight: FontWeight.bold,
+          child: SingleChildScrollView(
+            child: Column(
+              children: [
+                const Text(
+                  "Add Product in System",
+                  style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
                 ),
-              ),
-              const SizedBox(height: 24),
-
-              /// Main two-column layout
-              Expanded(
-                child: Row(
+                const SizedBox(height: 24),
+                Row(
+                  crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    /// LEFT: Single Product
+                    // LEFT: Single Product Form
                     Expanded(
                       flex: 2,
                       child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          const Text("Single Product",
-                              style: TextStyle(
-                                  fontSize: 16, fontWeight: FontWeight.w600)),
-                          const SizedBox(height: 16),
-
-                          _buildTextField("Barcode"),
-                          _buildTextField("Product Name"),
-                          _buildTextField("Product Description", maxLines: 3),
-
-                          DropdownButtonFormField<String>(
-                            decoration: _inputDecoration("Category"),
-                            items: const [
-                              DropdownMenuItem(
-                                value: "cat1",
-                                child: Text("Category 1"),
-                              ),
-                              DropdownMenuItem(
-                                value: "cat2",
-                                child: Text("Category 2"),
-                              ),
-                            ],
-                            onChanged: (value) {},
+                          _buildTextField("Barcode", _barcodeController),
+                          _buildTextField("Product Name", _nameController),
+                          _buildTextField(
+                            "Product Description",
+                            _descriptionController,
+                            maxLines: 3,
                           ),
-                          const SizedBox(height: 12),
-
-                          _buildTextField("Quantity"),
-                          _buildTextField("Price"),
-                          _buildTextField("Tax %"),
-                          _buildTextField("Buying Price"),
-
-                          const SizedBox(height: 16),
-
-                          SizedBox(
-                            width: double.infinity,
-                            child: ElevatedButton(
-                              style: ElevatedButton.styleFrom(
-                                backgroundColor:
-                                const Color(0xFF5A4DFF), // purple button
-                                padding:
-                                const EdgeInsets.symmetric(vertical: 14),
-                                shape: RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(6),
-                                ),
-                              ),
-                              onPressed: () {},
-                              child: const Text(
-                                "Save",
-                                style: TextStyle(color: Colors.white),
-                              ),
+                          _buildTextField(
+                            "Quantity",
+                            _quantityController,
+                            keyboardType: TextInputType.number,
+                          ),
+                          _buildTextField(
+                            "Price",
+                            _priceController,
+                            keyboardType: TextInputType.numberWithOptions(
+                              decimal: true,
                             ),
                           ),
-                        ],
-                      ),
-                    ),
-
-                    const VerticalDivider(width: 40),
-
-                    /// RIGHT: Bulk Upload
-                    Expanded(
-                      flex: 2,
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          const Text("Add in Bulk",
-                              style: TextStyle(
-                                  fontSize: 16, fontWeight: FontWeight.w600)),
                           const SizedBox(height: 16),
-
-                          const Text("Upload file"),
-                          const SizedBox(height: 12),
-
-                          Container(
-                            height: 120,
-                            width: double.infinity,
-                            decoration: BoxDecoration(
-                              border: Border.all(
-                                color: Colors.grey.shade400,
-                                style: BorderStyle.solid,
-                              ),
-                              borderRadius: BorderRadius.circular(8),
-                            ),
-                            child: Column(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: [
-                                const Icon(Icons.cloud_upload_outlined,
-                                    size: 40, color: Colors.grey),
-                                const SizedBox(height: 8),
-                                Text.rich(
-                                  TextSpan(
-                                    children: [
-                                      TextSpan(
-                                        text: "Choose a file ",
-                                        style: TextStyle(
-                                          color: Colors.blue.shade700,
-                                          decoration: TextDecoration.underline,
-                                        ),
-                                      ),
-                                      const TextSpan(
-                                          text: "or drag and drop"),
-                                    ],
-                                  ),
-                                ),
-                                const SizedBox(height: 4),
-                                const Text("SVG, CSV up to 10MB",
-                                    style: TextStyle(color: Colors.grey)),
-                              ],
-                            ),
-                          ),
-
-                          const SizedBox(height: 24),
-
                           SizedBox(
                             width: double.infinity,
                             child: ElevatedButton(
@@ -162,15 +158,57 @@ class AddProductScreen extends StatelessWidget {
                                 backgroundColor: const Color(0xFF5A4DFF),
                                 padding:
                                 const EdgeInsets.symmetric(vertical: 14),
-                                shape: RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(6),
+                              ),
+                              onPressed: _saveProduct,
+                              child: const Text(
+                                "Save Product",
+                                style: TextStyle(
+                                  color: Colors.white,
+                                  fontSize: 16,
+                                  fontWeight: FontWeight.w600,
                                 ),
                               ),
-                              onPressed: () {},
-                              child: const Text(
-                                "Save",
-                                style: TextStyle(color: Colors.white),
-                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                    const VerticalDivider(width: 40),
+                    // RIGHT: Bulk Upload
+                    Expanded(
+                      flex: 2,
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          const Text(
+                            "Add in Bulk",
+                            style: TextStyle(
+                              fontSize: 16,
+                              fontWeight: FontWeight.w600,
+                            ),
+                          ),
+                          const SizedBox(height: 16),
+                          Container(
+                            height: 120,
+                            width: double.infinity,
+                            decoration: BoxDecoration(
+                              border: Border.all(color: Colors.grey.shade400),
+                              borderRadius: BorderRadius.circular(8),
+                            ),
+                            child: Column(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: const [
+                                Icon(
+                                  Icons.cloud_upload_outlined,
+                                  size: 40,
+                                  color: Colors.grey,
+                                ),
+                                SizedBox(height: 8),
+                                Text(
+                                  "Bulk upload not yet implemented.",
+                                  style: TextStyle(color: Colors.grey),
+                                ),
+                              ],
                             ),
                           ),
                         ],
@@ -178,32 +216,37 @@ class AddProductScreen extends StatelessWidget {
                     ),
                   ],
                 ),
-              ),
-            ],
+              ],
+            ),
           ),
         ),
       ),
     );
   }
 
-  /// Reusable Input Builder
-  static Widget _buildTextField(String label, {int maxLines = 1}) {
+  Widget _buildTextField(
+      String label,
+      TextEditingController controller, {
+        int maxLines = 1,
+        TextInputType? keyboardType,
+      }) {
     return Padding(
       padding: const EdgeInsets.only(bottom: 12),
       child: TextField(
+        controller: controller,
         maxLines: maxLines,
-        decoration: _inputDecoration(label),
+        keyboardType: keyboardType,
+        decoration: InputDecoration(
+          labelText: label,
+          border: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(6),
+          ),
+          contentPadding: const EdgeInsets.symmetric(
+            horizontal: 12,
+            vertical: 10,
+          ),
+        ),
       ),
-    );
-  }
-
-  static InputDecoration _inputDecoration(String label) {
-    return InputDecoration(
-      labelText: label,
-      border: OutlineInputBorder(
-        borderRadius: BorderRadius.circular(6),
-      ),
-      contentPadding: const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
     );
   }
 }

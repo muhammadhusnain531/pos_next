@@ -29,11 +29,9 @@ class _PayByCardPageState extends State<PayByCardPage> {
       _isProcessing = true;
     });
 
-    // Simulate network delay / transaction processing
     await Future.delayed(const Duration(seconds: 2));
 
     if (!mounted) return;
-
     setState(() {
       _isProcessing = false;
     });
@@ -47,8 +45,9 @@ class _PayByCardPageState extends State<PayByCardPage> {
         actions: [
           TextButton(
             onPressed: () {
-              Navigator.of(ctx).pop(); // Close dialog
-              Navigator.of(context).pop(); // Go back to main screen
+              Navigator.of(ctx).pop();
+              // Return TRUE
+              Navigator.of(context).pop(true);
             },
             child: const Text("OK"),
           )
@@ -68,7 +67,6 @@ class _PayByCardPageState extends State<PayByCardPage> {
       return;
     }
 
-    // Prompt user for the Card amount
     final double? cardAmount = await showDialog<double>(
       context: context,
       builder: (context) {
@@ -78,25 +76,16 @@ class _PayByCardPageState extends State<PayByCardPage> {
           content: TextField(
             keyboardType: const TextInputType.numberWithOptions(decimal: true),
             autofocus: true,
-            decoration: const InputDecoration(
-              prefixText: "\$ ",
-              hintText: "0.00",
-              border: OutlineInputBorder(),
-            ),
+            decoration: const InputDecoration(prefixText: "\$ ", hintText: "0.00", border: OutlineInputBorder()),
             onChanged: (val) => amountStr = val,
           ),
           actions: [
-            TextButton(
-              onPressed: () => Navigator.pop(context),
-              child: const Text("Cancel"),
-            ),
+            TextButton(onPressed: () => Navigator.pop(context), child: const Text("Cancel")),
             ElevatedButton(
               onPressed: () {
                 final val = double.tryParse(amountStr);
                 if (val != null && val > 0 && val <= widget.totalDue) {
                   Navigator.pop(context, val);
-                } else {
-                  // Invalid amount logic (visual feedback or ignore)
                 }
               },
               child: const Text("Confirm"),
@@ -106,13 +95,12 @@ class _PayByCardPageState extends State<PayByCardPage> {
       },
     );
 
-    if (cardAmount == null) return; // User cancelled
+    if (cardAmount == null) return;
 
     setState(() {
       _isProcessing = true;
     });
 
-    // Simulate processing the card part
     await Future.delayed(const Duration(seconds: 2));
 
     if (!mounted) return;
@@ -120,24 +108,23 @@ class _PayByCardPageState extends State<PayByCardPage> {
       _isProcessing = false;
     });
 
-    // Calculate remaining for Cash
     final double remaining = widget.totalDue - cardAmount;
 
     if (remaining <= 0.01) {
-      // Practically paid in full
       _showSuccessDialog(cardAmount);
     } else {
-      // Navigate to Cash Page for the rest
-      // We assume if they come back from Cash Page, the transaction is done.
-      Navigator.push(
+      // Go to Cash page
+      final result = await Navigator.push(
         context,
         MaterialPageRoute(
           builder: (context) => PayByCashPage(totalDue: remaining),
         ),
-      ).then((_) {
-         // Close the card page when returning from cash page (assuming transaction flow ended)
-         Navigator.pop(context);
-      });
+      );
+      
+      // If cash payment succeeded, close card page with success
+      if (result == true) {
+        Navigator.pop(context, true);
+      }
     }
   }
 
@@ -152,7 +139,7 @@ class _PayByCardPageState extends State<PayByCardPage> {
           TextButton(
             onPressed: () {
               Navigator.of(ctx).pop();
-              Navigator.of(context).pop();
+              Navigator.of(context).pop(true);
             },
             child: const Text("OK"),
           )
@@ -173,195 +160,58 @@ class _PayByCardPageState extends State<PayByCardPage> {
             color: Colors.white,
             borderRadius: BorderRadius.circular(20),
             boxShadow: [
-              BoxShadow(
-                color: Colors.black.withOpacity(0.07),
-                blurRadius: 24,
-                offset: const Offset(0, 10),
-              ),
+              BoxShadow(color: Colors.black.withOpacity(0.07), blurRadius: 24, offset: const Offset(0, 10)),
             ],
           ),
           child: Column(
             mainAxisSize: MainAxisSize.min,
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              // Title and order info
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  const Text(
-                    'Pay by Card',
-                    style: TextStyle(
-                      fontSize: 26,
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
-                  Column(
-                    crossAxisAlignment: CrossAxisAlignment.end,
-                    children: [
-                      const Text(
-                        'Order #12345',
-                        style: TextStyle(
-                          color: Colors.grey,
-                          fontSize: 14,
-                        ),
-                      ),
-                      const SizedBox(height: 2),
-                      Text(
-                        'Date: ${DateTime.now().toString().split(' ')[0]}',
-                        style: const TextStyle(
-                          color: Colors.grey,
-                          fontSize: 14,
-                        ),
-                      ),
-                    ],
-                  ),
+                  const Text('Pay by Card', style: TextStyle(fontSize: 26, fontWeight: FontWeight.bold)),
+                  Text('Order #12345', style: TextStyle(color: Colors.grey[600])),
                 ],
               ),
               const SizedBox(height: 32),
-              // Payment Amount
-              const Text(
-                'Payment Amount',
-                style: TextStyle(
-                  fontWeight: FontWeight.w500,
-                  fontSize: 16,
-                ),
-              ),
+              const Text('Payment Amount', style: TextStyle(fontWeight: FontWeight.w500, fontSize: 16)),
               const SizedBox(height: 8),
-              SizedBox(
-                height: 56,
-                child: TextField(
-                  enabled: false, // Read-only, displays total due
-                  controller: TextEditingController(text: widget.totalDue.toStringAsFixed(2)),
-                  style: const TextStyle(
-                    fontWeight: FontWeight.bold,
-                    fontSize: 24,
-                  ),
-                  decoration: const InputDecoration(
-                    prefixText: '\$ ',
-                    prefixStyle: TextStyle(
-                      fontSize: 24,
-                      fontWeight: FontWeight.bold,
-                    ),
-                    border: OutlineInputBorder(),
-                    contentPadding: EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-                  ),
+              TextField(
+                enabled: false,
+                controller: TextEditingController(text: widget.totalDue.toStringAsFixed(2)),
+                style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 24),
+                decoration: const InputDecoration(
+                  prefixText: '\$ ',
+                  border: OutlineInputBorder(),
                 ),
               ),
               const SizedBox(height: 24),
-              // Payment Method
-              const Text(
-                'Select Payment Method',
-                style: TextStyle(
-                  fontWeight: FontWeight.w500,
-                  fontSize: 16,
-                ),
-              ),
+              const Text('Select Payment Method', style: TextStyle(fontWeight: FontWeight.w500, fontSize: 16)),
               const SizedBox(height: 16),
-              // Bank options
               Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  _PaymentMethodButton(
-                    icon: Icons.account_balance,
-                    label: 'HBL',
-                    isSelected: _selectedMethod == 'HBL',
-                    onTap: () => setState(() => _selectedMethod = 'HBL'),
-                  ),
-                  _PaymentMethodButton(
-                    icon: Icons.account_balance,
-                    label: 'Meezan',
-                    isSelected: _selectedMethod == 'Meezan',
-                    onTap: () => setState(() => _selectedMethod = 'Meezan'),
-                  ),
-                  _PaymentMethodButton(
-                    icon: Icons.account_balance,
-                    label: 'ABL',
-                    isSelected: _selectedMethod == 'ABL',
-                    onTap: () => setState(() => _selectedMethod = 'ABL'),
-                  ),
-                ],
-              ),
-              const SizedBox(height: 16),
-              // Card & QR options
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  _PaymentMethodButton(
-                    icon: Icons.credit_card,
-                    label: 'Credit Card',
-                    isSelected: _selectedMethod == 'Credit Card',
-                    onTap: () => setState(() => _selectedMethod = 'Credit Card'),
-                  ),
-                  _PaymentMethodButton(
-                    icon: Icons.credit_card,
-                    label: 'Debit Card',
-                    isSelected: _selectedMethod == 'Debit Card',
-                    onTap: () => setState(() => _selectedMethod = 'Debit Card'),
-                  ),
-                  _PaymentMethodButton(
-                    icon: Icons.qr_code_2,
-                    label: 'QR Code',
-                    isSelected: _selectedMethod == 'QR Code',
-                    onTap: () => setState(() => _selectedMethod = 'QR Code'),
-                  ),
+                  _PaymentMethodButton(icon: Icons.account_balance, label: 'HBL', isSelected: _selectedMethod == 'HBL', onTap: () => setState(() => _selectedMethod = 'HBL')),
+                  const SizedBox(width: 10),
+                  _PaymentMethodButton(icon: Icons.credit_card, label: 'Credit', isSelected: _selectedMethod == 'Credit Card', onTap: () => setState(() => _selectedMethod = 'Credit Card')),
                 ],
               ),
               const SizedBox(height: 32),
-              // Proceed to Pay button
               SizedBox(
                 width: double.infinity,
                 height: 52,
-                child: ElevatedButton.icon(
-                  icon: _isProcessing
-                      ? const SizedBox(
-                          width: 24,
-                          height: 24,
-                          child: CircularProgressIndicator(
-                            color: Colors.white,
-                            strokeWidth: 2,
-                          ),
-                        )
-                      : const Icon(Icons.payment, color: Colors.white),
-                  label: Text(
-                    _isProcessing ? 'Processing...' : 'Proceed to Pay',
-                    style: const TextStyle(
-                      fontWeight: FontWeight.w600,
-                      fontSize: 18,
-                      color: Colors.white,
-                    ),
-                  ),
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: const Color(0xFF4D4AE8),
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(8),
-                    ),
-                  ),
+                child: ElevatedButton(
                   onPressed: _isProcessing ? null : _handleFullPayment,
+                  child: _isProcessing ? const CircularProgressIndicator(color: Colors.white) : const Text("Proceed to Pay"),
                 ),
               ),
               const SizedBox(height: 16),
-              // Also Add Cash button
               SizedBox(
                 width: double.infinity,
                 height: 48,
-                child: OutlinedButton.icon(
-                  icon: const Icon(Icons.add, color: Color(0xFF4D4AE8)),
-                  label: const Text(
-                    'Also Add Cash',
-                    style: TextStyle(
-                      color: Color(0xFF4D4AE8),
-                      fontWeight: FontWeight.w600,
-                      fontSize: 16,
-                    ),
-                  ),
-                  style: OutlinedButton.styleFrom(
-                    side: const BorderSide(color: Color(0xFFE5E7EB)),
-                    backgroundColor: const Color(0xFFF4F6F8),
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(8),
-                    ),
-                  ),
+                child: OutlinedButton(
                   onPressed: _isProcessing ? null : _handleSplitPayment,
+                  child: const Text("Also Add Cash"),
                 ),
               ),
             ],
@@ -378,51 +228,19 @@ class _PaymentMethodButton extends StatelessWidget {
   final bool isSelected;
   final VoidCallback onTap;
 
-  const _PaymentMethodButton({
-    Key? key,
-    required this.icon,
-    required this.label,
-    required this.isSelected,
-    required this.onTap,
-  }) : super(key: key);
+  const _PaymentMethodButton({Key? key, required this.icon, required this.label, required this.isSelected, required this.onTap}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return Expanded(
-      child: Container(
-        margin: const EdgeInsets.symmetric(horizontal: 6),
-        child: OutlinedButton(
-          onPressed: onTap,
-          style: OutlinedButton.styleFrom(
-            padding: const EdgeInsets.symmetric(vertical: 18),
-            backgroundColor: isSelected ? const Color(0xFFEEF2FF) : const Color(0xFFF4F6F8),
-            side: BorderSide(
-              color: isSelected ? const Color(0xFF4D4AE8) : const Color(0xFFE5E7EB),
-              width: isSelected ? 2 : 1,
-            ),
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(8),
-            ),
-          ),
-          child: Column(
-            children: [
-              Icon(
-                icon,
-                color: isSelected ? const Color(0xFF4D4AE8) : const Color(0xFF1F2937),
-                size: 28,
-              ),
-              const SizedBox(height: 6),
-              Text(
-                label,
-                style: TextStyle(
-                  fontWeight: isSelected ? FontWeight.bold : FontWeight.w500,
-                  fontSize: 15,
-                  color: isSelected ? const Color(0xFF4D4AE8) : const Color(0xFF1F2937),
-                ),
-              ),
-            ],
-          ),
+      child: OutlinedButton(
+        onPressed: onTap,
+        style: OutlinedButton.styleFrom(
+          padding: const EdgeInsets.symmetric(vertical: 18),
+          backgroundColor: isSelected ? const Color(0xFFEEF2FF) : const Color(0xFFF4F6F8),
+          side: BorderSide(color: isSelected ? const Color(0xFF4D4AE8) : const Color(0xFFE5E7EB), width: isSelected ? 2 : 1),
         ),
+        child: Column(children: [Icon(icon, color: isSelected ? const Color(0xFF4D4AE8) : Colors.black), Text(label)]),
       ),
     );
   }
