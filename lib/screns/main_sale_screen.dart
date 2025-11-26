@@ -1,4 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import '../services/database_service.dart';
+import 'business_screens/day_opening_screen.dart';
+import 'business_screens/day_closing_screen.dart';
 
 class MainSaleScreen extends StatelessWidget {
   const MainSaleScreen({super.key});
@@ -123,7 +127,38 @@ class MainSaleScreen extends StatelessWidget {
                     PosButton(label: "Gift Card", color: Colors.green),
                     PosButton(label: "Discount", color: Colors.orange),
                     PosButton(label: "Stock Details", color: Colors.grey),
-                    PosButton(label: "Day/Opening Closing", color: Colors.grey[700]!),
+                    PosButton(
+                      label: "Day/Opening Closing", 
+                      color: Colors.grey[700]!,
+                      onPressed: () async {
+                        print("Day/Opening Closing button pressed");
+                        try {
+                          final database = Provider.of<AppDatabase>(context, listen: false);
+                          print("Database retrieved: $database");
+                          final currentDay = await database.getCurrentBusinessDay();
+                          print("Current day retrieved: $currentDay");
+
+                          if (!context.mounted) return;
+
+                          if (currentDay == null) {
+                            print("Navigating to DayOpeningScreen");
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(builder: (context) => const DayOpeningScreen()),
+                            );
+                          } else {
+                            print("Navigating to DayClosingScreen");
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(builder: (context) => const DayClosingScreen()),
+                            );
+                          }
+                        } catch (e, stack) {
+                          print("Error in Day/Opening Closing button: $e");
+                          print(stack);
+                        }
+                      },
+                    ),
                     PosButton(label: "Return", color: Colors.red[300]!),
                     PosButton(label: "Home Delay", color: Colors.grey[800]!),
                     PosButton(label: "Issue Gift Card", color: Colors.green[700]!),
@@ -183,8 +218,14 @@ class SummaryRow extends StatelessWidget {
 class PosButton extends StatelessWidget {
   final String label;
   final Color color;
+  final VoidCallback? onPressed;
 
-  const PosButton({super.key, required this.label, required this.color});
+  const PosButton({
+    super.key, 
+    required this.label, 
+    required this.color,
+    this.onPressed,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -196,7 +237,7 @@ class PosButton extends StatelessWidget {
         ),
         padding: const EdgeInsets.all(12),
       ),
-      onPressed: () {},
+      onPressed: onPressed ?? () {},
       child: Text(
         label,
         textAlign: TextAlign.center,

@@ -34,12 +34,47 @@ class SaleItems extends Table {
   RealColumn get price => real()(); // Snapshot price at time of sale
 }
 
-@DriftDatabase(tables: [Products, Sales, SaleItems])
+// Business Days Table
+class BusinessDays extends Table {
+  IntColumn get id => integer().autoIncrement()();
+  DateTimeColumn get openTime => dateTime().withDefault(currentDateAndTime)();
+  DateTimeColumn get closeTime => dateTime().nullable()();
+  RealColumn get openingBalance => real()();
+  RealColumn get closingBalance => real().nullable()();
+  RealColumn get totalCashSales => real().withDefault(const Constant(0.0))();
+  RealColumn get totalCardSales => real().withDefault(const Constant(0.0))();
+  RealColumn get totalGiftCardSales => real().withDefault(const Constant(0.0))(); // New
+  RealColumn get totalOtherSales => real().withDefault(const Constant(0.0))(); // New
+  TextColumn get status => text().withDefault(const Constant('Open'))(); // Open, Closed
+  TextColumn get openedBy => text().nullable()();
+  TextColumn get closedBy => text().nullable()();
+  RealColumn get discrepancy => real().nullable()();
+}
+
+@DriftDatabase(tables: [Products, Sales, SaleItems, BusinessDays])
 class AppDatabase extends _$AppDatabase {
   AppDatabase() : super(openConnection());
 
   @override
-  int get schemaVersion => 1;
+  int get schemaVersion => 3; // Incremented to 3
+
+  @override
+  MigrationStrategy get migration {
+    return MigrationStrategy(
+      onCreate: (Migrator m) async {
+        await m.createAll();
+      },
+      onUpgrade: (Migrator m, int from, int to) async {
+        if (from < 2) {
+          await m.createTable(businessDays);
+        }
+        if (from < 3) {
+          await m.addColumn(businessDays, businessDays.totalGiftCardSales);
+          await m.addColumn(businessDays, businessDays.totalOtherSales);
+        }
+      },
+    );
+  }
 
   // --- Product Queries ---
   Future<List<Product>> getAllProducts() => select(products).get();
@@ -94,6 +129,42 @@ class AppDatabase extends _$AppDatabase {
         );
       }
       
+      // Update current business day sales
+      final currentDay = await getCurrentBusinessDay();
+      if (currentDay != null) {
+        double saleAmount = sale.totalAmount.value;
+        final method = sale.paymentMethod.value;
+        print("DEBUG: Updating Day ${currentDay.id} for Sale: $saleAmount via $method");
+
+        if (method == 'Cash') {
+          print("DEBUG: Incrementing Cash Sales");
+          await (update(businessDays)..where((t) => t.id.equals(currentDay.id))).write(
+            BusinessDaysCompanion(
+              totalCashSales: Value(currentDay.totalCashSales + saleAmount),
+            ),
+          );
+        } else if (method == 'Card') {
+          print("DEBUG: Incrementing Card Sales");
+          await (update(businessDays)..where((t) => t.id.equals(currentDay.id))).write(
+            BusinessDaysCompanion(
+              totalCardSales: Value(currentDay.totalCardSales + saleAmount),
+            ),
+          );
+        } else if (method == 'Gift Card') {
+           await (update(businessDays)..where((t) => t.id.equals(currentDay.id))).write(
+            BusinessDaysCompanion(
+              totalGiftCardSales: Value(currentDay.totalGiftCardSales + saleAmount),
+            ),
+          );
+        } else {
+           await (update(businessDays)..where((t) => t.id.equals(currentDay.id))).write(
+            BusinessDaysCompanion(
+              totalOtherSales: Value(currentDay.totalOtherSales + saleAmount),
+            ),
+          );
+        }
+      }
+      
       return saleId;
     });
   }
@@ -103,5 +174,33 @@ class AppDatabase extends _$AppDatabase {
   // Report Query: Get sales between dates
   Future<List<Sale>> getSalesByDateRange(DateTime start, DateTime end) {
     return (select(sales)..where((tbl) => tbl.date.isBetweenValues(start, end))).get();
+  }
+
+  // --- Business Day Queries ---
+  Future<int> openBusinessDay(double openingBalance, String? user) {
+    return into(businessDays).insert(BusinessDaysCompanion(
+      openingBalance: Value(openingBalance),
+      openedBy: Value(user),
+      status: Value('Open'),
+      openTime: Value(DateTime.now()),
+    ));
+  }
+
+  Future<int> closeBusinessDay(int id, double closingBalance, double discrepancy, String? user) {
+    return (update(businessDays)..where((t) => t.id.equals(id))).write(BusinessDaysCompanion(
+      closingBalance: Value(closingBalance),
+      discrepancy: Value(discrepancy),
+      closedBy: Value(user),
+      status: Value('Closed'),
+      closeTime: Value(DateTime.now()),
+    ));
+  }
+
+  Future<BusinessDay?> getCurrentBusinessDay() {
+    return (select(businessDays)
+      ..where((t) => t.status.equals('Open'))
+      ..orderBy([(t) => OrderingTerm.desc(t.openTime)])
+      ..limit(1)
+    ).getSingleOrNull();
   }
 }

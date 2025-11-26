@@ -1060,18 +1060,668 @@ class SaleItemsCompanion extends UpdateCompanion<SaleItem> {
   }
 }
 
+class $BusinessDaysTable extends BusinessDays
+    with TableInfo<$BusinessDaysTable, BusinessDay> {
+  @override
+  final GeneratedDatabase attachedDatabase;
+  final String? _alias;
+  $BusinessDaysTable(this.attachedDatabase, [this._alias]);
+  static const VerificationMeta _idMeta = const VerificationMeta('id');
+  @override
+  late final GeneratedColumn<int> id = GeneratedColumn<int>(
+      'id', aliasedName, false,
+      hasAutoIncrement: true,
+      type: DriftSqlType.int,
+      requiredDuringInsert: false,
+      defaultConstraints:
+          GeneratedColumn.constraintIsAlways('PRIMARY KEY AUTOINCREMENT'));
+  static const VerificationMeta _openTimeMeta =
+      const VerificationMeta('openTime');
+  @override
+  late final GeneratedColumn<DateTime> openTime = GeneratedColumn<DateTime>(
+      'open_time', aliasedName, false,
+      type: DriftSqlType.dateTime,
+      requiredDuringInsert: false,
+      defaultValue: currentDateAndTime);
+  static const VerificationMeta _closeTimeMeta =
+      const VerificationMeta('closeTime');
+  @override
+  late final GeneratedColumn<DateTime> closeTime = GeneratedColumn<DateTime>(
+      'close_time', aliasedName, true,
+      type: DriftSqlType.dateTime, requiredDuringInsert: false);
+  static const VerificationMeta _openingBalanceMeta =
+      const VerificationMeta('openingBalance');
+  @override
+  late final GeneratedColumn<double> openingBalance = GeneratedColumn<double>(
+      'opening_balance', aliasedName, false,
+      type: DriftSqlType.double, requiredDuringInsert: true);
+  static const VerificationMeta _closingBalanceMeta =
+      const VerificationMeta('closingBalance');
+  @override
+  late final GeneratedColumn<double> closingBalance = GeneratedColumn<double>(
+      'closing_balance', aliasedName, true,
+      type: DriftSqlType.double, requiredDuringInsert: false);
+  static const VerificationMeta _totalCashSalesMeta =
+      const VerificationMeta('totalCashSales');
+  @override
+  late final GeneratedColumn<double> totalCashSales = GeneratedColumn<double>(
+      'total_cash_sales', aliasedName, false,
+      type: DriftSqlType.double,
+      requiredDuringInsert: false,
+      defaultValue: const Constant(0.0));
+  static const VerificationMeta _totalCardSalesMeta =
+      const VerificationMeta('totalCardSales');
+  @override
+  late final GeneratedColumn<double> totalCardSales = GeneratedColumn<double>(
+      'total_card_sales', aliasedName, false,
+      type: DriftSqlType.double,
+      requiredDuringInsert: false,
+      defaultValue: const Constant(0.0));
+  static const VerificationMeta _totalGiftCardSalesMeta =
+      const VerificationMeta('totalGiftCardSales');
+  @override
+  late final GeneratedColumn<double> totalGiftCardSales =
+      GeneratedColumn<double>('total_gift_card_sales', aliasedName, false,
+          type: DriftSqlType.double,
+          requiredDuringInsert: false,
+          defaultValue: const Constant(0.0));
+  static const VerificationMeta _totalOtherSalesMeta =
+      const VerificationMeta('totalOtherSales');
+  @override
+  late final GeneratedColumn<double> totalOtherSales = GeneratedColumn<double>(
+      'total_other_sales', aliasedName, false,
+      type: DriftSqlType.double,
+      requiredDuringInsert: false,
+      defaultValue: const Constant(0.0));
+  static const VerificationMeta _statusMeta = const VerificationMeta('status');
+  @override
+  late final GeneratedColumn<String> status = GeneratedColumn<String>(
+      'status', aliasedName, false,
+      type: DriftSqlType.string,
+      requiredDuringInsert: false,
+      defaultValue: const Constant('Open'));
+  static const VerificationMeta _openedByMeta =
+      const VerificationMeta('openedBy');
+  @override
+  late final GeneratedColumn<String> openedBy = GeneratedColumn<String>(
+      'opened_by', aliasedName, true,
+      type: DriftSqlType.string, requiredDuringInsert: false);
+  static const VerificationMeta _closedByMeta =
+      const VerificationMeta('closedBy');
+  @override
+  late final GeneratedColumn<String> closedBy = GeneratedColumn<String>(
+      'closed_by', aliasedName, true,
+      type: DriftSqlType.string, requiredDuringInsert: false);
+  static const VerificationMeta _discrepancyMeta =
+      const VerificationMeta('discrepancy');
+  @override
+  late final GeneratedColumn<double> discrepancy = GeneratedColumn<double>(
+      'discrepancy', aliasedName, true,
+      type: DriftSqlType.double, requiredDuringInsert: false);
+  @override
+  List<GeneratedColumn> get $columns => [
+        id,
+        openTime,
+        closeTime,
+        openingBalance,
+        closingBalance,
+        totalCashSales,
+        totalCardSales,
+        totalGiftCardSales,
+        totalOtherSales,
+        status,
+        openedBy,
+        closedBy,
+        discrepancy
+      ];
+  @override
+  String get aliasedName => _alias ?? actualTableName;
+  @override
+  String get actualTableName => $name;
+  static const String $name = 'business_days';
+  @override
+  VerificationContext validateIntegrity(Insertable<BusinessDay> instance,
+      {bool isInserting = false}) {
+    final context = VerificationContext();
+    final data = instance.toColumns(true);
+    if (data.containsKey('id')) {
+      context.handle(_idMeta, id.isAcceptableOrUnknown(data['id']!, _idMeta));
+    }
+    if (data.containsKey('open_time')) {
+      context.handle(_openTimeMeta,
+          openTime.isAcceptableOrUnknown(data['open_time']!, _openTimeMeta));
+    }
+    if (data.containsKey('close_time')) {
+      context.handle(_closeTimeMeta,
+          closeTime.isAcceptableOrUnknown(data['close_time']!, _closeTimeMeta));
+    }
+    if (data.containsKey('opening_balance')) {
+      context.handle(
+          _openingBalanceMeta,
+          openingBalance.isAcceptableOrUnknown(
+              data['opening_balance']!, _openingBalanceMeta));
+    } else if (isInserting) {
+      context.missing(_openingBalanceMeta);
+    }
+    if (data.containsKey('closing_balance')) {
+      context.handle(
+          _closingBalanceMeta,
+          closingBalance.isAcceptableOrUnknown(
+              data['closing_balance']!, _closingBalanceMeta));
+    }
+    if (data.containsKey('total_cash_sales')) {
+      context.handle(
+          _totalCashSalesMeta,
+          totalCashSales.isAcceptableOrUnknown(
+              data['total_cash_sales']!, _totalCashSalesMeta));
+    }
+    if (data.containsKey('total_card_sales')) {
+      context.handle(
+          _totalCardSalesMeta,
+          totalCardSales.isAcceptableOrUnknown(
+              data['total_card_sales']!, _totalCardSalesMeta));
+    }
+    if (data.containsKey('total_gift_card_sales')) {
+      context.handle(
+          _totalGiftCardSalesMeta,
+          totalGiftCardSales.isAcceptableOrUnknown(
+              data['total_gift_card_sales']!, _totalGiftCardSalesMeta));
+    }
+    if (data.containsKey('total_other_sales')) {
+      context.handle(
+          _totalOtherSalesMeta,
+          totalOtherSales.isAcceptableOrUnknown(
+              data['total_other_sales']!, _totalOtherSalesMeta));
+    }
+    if (data.containsKey('status')) {
+      context.handle(_statusMeta,
+          status.isAcceptableOrUnknown(data['status']!, _statusMeta));
+    }
+    if (data.containsKey('opened_by')) {
+      context.handle(_openedByMeta,
+          openedBy.isAcceptableOrUnknown(data['opened_by']!, _openedByMeta));
+    }
+    if (data.containsKey('closed_by')) {
+      context.handle(_closedByMeta,
+          closedBy.isAcceptableOrUnknown(data['closed_by']!, _closedByMeta));
+    }
+    if (data.containsKey('discrepancy')) {
+      context.handle(
+          _discrepancyMeta,
+          discrepancy.isAcceptableOrUnknown(
+              data['discrepancy']!, _discrepancyMeta));
+    }
+    return context;
+  }
+
+  @override
+  Set<GeneratedColumn> get $primaryKey => {id};
+  @override
+  BusinessDay map(Map<String, dynamic> data, {String? tablePrefix}) {
+    final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : '';
+    return BusinessDay(
+      id: attachedDatabase.typeMapping
+          .read(DriftSqlType.int, data['${effectivePrefix}id'])!,
+      openTime: attachedDatabase.typeMapping
+          .read(DriftSqlType.dateTime, data['${effectivePrefix}open_time'])!,
+      closeTime: attachedDatabase.typeMapping
+          .read(DriftSqlType.dateTime, data['${effectivePrefix}close_time']),
+      openingBalance: attachedDatabase.typeMapping.read(
+          DriftSqlType.double, data['${effectivePrefix}opening_balance'])!,
+      closingBalance: attachedDatabase.typeMapping
+          .read(DriftSqlType.double, data['${effectivePrefix}closing_balance']),
+      totalCashSales: attachedDatabase.typeMapping.read(
+          DriftSqlType.double, data['${effectivePrefix}total_cash_sales'])!,
+      totalCardSales: attachedDatabase.typeMapping.read(
+          DriftSqlType.double, data['${effectivePrefix}total_card_sales'])!,
+      totalGiftCardSales: attachedDatabase.typeMapping.read(DriftSqlType.double,
+          data['${effectivePrefix}total_gift_card_sales'])!,
+      totalOtherSales: attachedDatabase.typeMapping.read(
+          DriftSqlType.double, data['${effectivePrefix}total_other_sales'])!,
+      status: attachedDatabase.typeMapping
+          .read(DriftSqlType.string, data['${effectivePrefix}status'])!,
+      openedBy: attachedDatabase.typeMapping
+          .read(DriftSqlType.string, data['${effectivePrefix}opened_by']),
+      closedBy: attachedDatabase.typeMapping
+          .read(DriftSqlType.string, data['${effectivePrefix}closed_by']),
+      discrepancy: attachedDatabase.typeMapping
+          .read(DriftSqlType.double, data['${effectivePrefix}discrepancy']),
+    );
+  }
+
+  @override
+  $BusinessDaysTable createAlias(String alias) {
+    return $BusinessDaysTable(attachedDatabase, alias);
+  }
+}
+
+class BusinessDay extends DataClass implements Insertable<BusinessDay> {
+  final int id;
+  final DateTime openTime;
+  final DateTime? closeTime;
+  final double openingBalance;
+  final double? closingBalance;
+  final double totalCashSales;
+  final double totalCardSales;
+  final double totalGiftCardSales;
+  final double totalOtherSales;
+  final String status;
+  final String? openedBy;
+  final String? closedBy;
+  final double? discrepancy;
+  const BusinessDay(
+      {required this.id,
+      required this.openTime,
+      this.closeTime,
+      required this.openingBalance,
+      this.closingBalance,
+      required this.totalCashSales,
+      required this.totalCardSales,
+      required this.totalGiftCardSales,
+      required this.totalOtherSales,
+      required this.status,
+      this.openedBy,
+      this.closedBy,
+      this.discrepancy});
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    map['id'] = Variable<int>(id);
+    map['open_time'] = Variable<DateTime>(openTime);
+    if (!nullToAbsent || closeTime != null) {
+      map['close_time'] = Variable<DateTime>(closeTime);
+    }
+    map['opening_balance'] = Variable<double>(openingBalance);
+    if (!nullToAbsent || closingBalance != null) {
+      map['closing_balance'] = Variable<double>(closingBalance);
+    }
+    map['total_cash_sales'] = Variable<double>(totalCashSales);
+    map['total_card_sales'] = Variable<double>(totalCardSales);
+    map['total_gift_card_sales'] = Variable<double>(totalGiftCardSales);
+    map['total_other_sales'] = Variable<double>(totalOtherSales);
+    map['status'] = Variable<String>(status);
+    if (!nullToAbsent || openedBy != null) {
+      map['opened_by'] = Variable<String>(openedBy);
+    }
+    if (!nullToAbsent || closedBy != null) {
+      map['closed_by'] = Variable<String>(closedBy);
+    }
+    if (!nullToAbsent || discrepancy != null) {
+      map['discrepancy'] = Variable<double>(discrepancy);
+    }
+    return map;
+  }
+
+  BusinessDaysCompanion toCompanion(bool nullToAbsent) {
+    return BusinessDaysCompanion(
+      id: Value(id),
+      openTime: Value(openTime),
+      closeTime: closeTime == null && nullToAbsent
+          ? const Value.absent()
+          : Value(closeTime),
+      openingBalance: Value(openingBalance),
+      closingBalance: closingBalance == null && nullToAbsent
+          ? const Value.absent()
+          : Value(closingBalance),
+      totalCashSales: Value(totalCashSales),
+      totalCardSales: Value(totalCardSales),
+      totalGiftCardSales: Value(totalGiftCardSales),
+      totalOtherSales: Value(totalOtherSales),
+      status: Value(status),
+      openedBy: openedBy == null && nullToAbsent
+          ? const Value.absent()
+          : Value(openedBy),
+      closedBy: closedBy == null && nullToAbsent
+          ? const Value.absent()
+          : Value(closedBy),
+      discrepancy: discrepancy == null && nullToAbsent
+          ? const Value.absent()
+          : Value(discrepancy),
+    );
+  }
+
+  factory BusinessDay.fromJson(Map<String, dynamic> json,
+      {ValueSerializer? serializer}) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return BusinessDay(
+      id: serializer.fromJson<int>(json['id']),
+      openTime: serializer.fromJson<DateTime>(json['openTime']),
+      closeTime: serializer.fromJson<DateTime?>(json['closeTime']),
+      openingBalance: serializer.fromJson<double>(json['openingBalance']),
+      closingBalance: serializer.fromJson<double?>(json['closingBalance']),
+      totalCashSales: serializer.fromJson<double>(json['totalCashSales']),
+      totalCardSales: serializer.fromJson<double>(json['totalCardSales']),
+      totalGiftCardSales:
+          serializer.fromJson<double>(json['totalGiftCardSales']),
+      totalOtherSales: serializer.fromJson<double>(json['totalOtherSales']),
+      status: serializer.fromJson<String>(json['status']),
+      openedBy: serializer.fromJson<String?>(json['openedBy']),
+      closedBy: serializer.fromJson<String?>(json['closedBy']),
+      discrepancy: serializer.fromJson<double?>(json['discrepancy']),
+    );
+  }
+  @override
+  Map<String, dynamic> toJson({ValueSerializer? serializer}) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return <String, dynamic>{
+      'id': serializer.toJson<int>(id),
+      'openTime': serializer.toJson<DateTime>(openTime),
+      'closeTime': serializer.toJson<DateTime?>(closeTime),
+      'openingBalance': serializer.toJson<double>(openingBalance),
+      'closingBalance': serializer.toJson<double?>(closingBalance),
+      'totalCashSales': serializer.toJson<double>(totalCashSales),
+      'totalCardSales': serializer.toJson<double>(totalCardSales),
+      'totalGiftCardSales': serializer.toJson<double>(totalGiftCardSales),
+      'totalOtherSales': serializer.toJson<double>(totalOtherSales),
+      'status': serializer.toJson<String>(status),
+      'openedBy': serializer.toJson<String?>(openedBy),
+      'closedBy': serializer.toJson<String?>(closedBy),
+      'discrepancy': serializer.toJson<double?>(discrepancy),
+    };
+  }
+
+  BusinessDay copyWith(
+          {int? id,
+          DateTime? openTime,
+          Value<DateTime?> closeTime = const Value.absent(),
+          double? openingBalance,
+          Value<double?> closingBalance = const Value.absent(),
+          double? totalCashSales,
+          double? totalCardSales,
+          double? totalGiftCardSales,
+          double? totalOtherSales,
+          String? status,
+          Value<String?> openedBy = const Value.absent(),
+          Value<String?> closedBy = const Value.absent(),
+          Value<double?> discrepancy = const Value.absent()}) =>
+      BusinessDay(
+        id: id ?? this.id,
+        openTime: openTime ?? this.openTime,
+        closeTime: closeTime.present ? closeTime.value : this.closeTime,
+        openingBalance: openingBalance ?? this.openingBalance,
+        closingBalance:
+            closingBalance.present ? closingBalance.value : this.closingBalance,
+        totalCashSales: totalCashSales ?? this.totalCashSales,
+        totalCardSales: totalCardSales ?? this.totalCardSales,
+        totalGiftCardSales: totalGiftCardSales ?? this.totalGiftCardSales,
+        totalOtherSales: totalOtherSales ?? this.totalOtherSales,
+        status: status ?? this.status,
+        openedBy: openedBy.present ? openedBy.value : this.openedBy,
+        closedBy: closedBy.present ? closedBy.value : this.closedBy,
+        discrepancy: discrepancy.present ? discrepancy.value : this.discrepancy,
+      );
+  BusinessDay copyWithCompanion(BusinessDaysCompanion data) {
+    return BusinessDay(
+      id: data.id.present ? data.id.value : this.id,
+      openTime: data.openTime.present ? data.openTime.value : this.openTime,
+      closeTime: data.closeTime.present ? data.closeTime.value : this.closeTime,
+      openingBalance: data.openingBalance.present
+          ? data.openingBalance.value
+          : this.openingBalance,
+      closingBalance: data.closingBalance.present
+          ? data.closingBalance.value
+          : this.closingBalance,
+      totalCashSales: data.totalCashSales.present
+          ? data.totalCashSales.value
+          : this.totalCashSales,
+      totalCardSales: data.totalCardSales.present
+          ? data.totalCardSales.value
+          : this.totalCardSales,
+      totalGiftCardSales: data.totalGiftCardSales.present
+          ? data.totalGiftCardSales.value
+          : this.totalGiftCardSales,
+      totalOtherSales: data.totalOtherSales.present
+          ? data.totalOtherSales.value
+          : this.totalOtherSales,
+      status: data.status.present ? data.status.value : this.status,
+      openedBy: data.openedBy.present ? data.openedBy.value : this.openedBy,
+      closedBy: data.closedBy.present ? data.closedBy.value : this.closedBy,
+      discrepancy:
+          data.discrepancy.present ? data.discrepancy.value : this.discrepancy,
+    );
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('BusinessDay(')
+          ..write('id: $id, ')
+          ..write('openTime: $openTime, ')
+          ..write('closeTime: $closeTime, ')
+          ..write('openingBalance: $openingBalance, ')
+          ..write('closingBalance: $closingBalance, ')
+          ..write('totalCashSales: $totalCashSales, ')
+          ..write('totalCardSales: $totalCardSales, ')
+          ..write('totalGiftCardSales: $totalGiftCardSales, ')
+          ..write('totalOtherSales: $totalOtherSales, ')
+          ..write('status: $status, ')
+          ..write('openedBy: $openedBy, ')
+          ..write('closedBy: $closedBy, ')
+          ..write('discrepancy: $discrepancy')
+          ..write(')'))
+        .toString();
+  }
+
+  @override
+  int get hashCode => Object.hash(
+      id,
+      openTime,
+      closeTime,
+      openingBalance,
+      closingBalance,
+      totalCashSales,
+      totalCardSales,
+      totalGiftCardSales,
+      totalOtherSales,
+      status,
+      openedBy,
+      closedBy,
+      discrepancy);
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      (other is BusinessDay &&
+          other.id == this.id &&
+          other.openTime == this.openTime &&
+          other.closeTime == this.closeTime &&
+          other.openingBalance == this.openingBalance &&
+          other.closingBalance == this.closingBalance &&
+          other.totalCashSales == this.totalCashSales &&
+          other.totalCardSales == this.totalCardSales &&
+          other.totalGiftCardSales == this.totalGiftCardSales &&
+          other.totalOtherSales == this.totalOtherSales &&
+          other.status == this.status &&
+          other.openedBy == this.openedBy &&
+          other.closedBy == this.closedBy &&
+          other.discrepancy == this.discrepancy);
+}
+
+class BusinessDaysCompanion extends UpdateCompanion<BusinessDay> {
+  final Value<int> id;
+  final Value<DateTime> openTime;
+  final Value<DateTime?> closeTime;
+  final Value<double> openingBalance;
+  final Value<double?> closingBalance;
+  final Value<double> totalCashSales;
+  final Value<double> totalCardSales;
+  final Value<double> totalGiftCardSales;
+  final Value<double> totalOtherSales;
+  final Value<String> status;
+  final Value<String?> openedBy;
+  final Value<String?> closedBy;
+  final Value<double?> discrepancy;
+  const BusinessDaysCompanion({
+    this.id = const Value.absent(),
+    this.openTime = const Value.absent(),
+    this.closeTime = const Value.absent(),
+    this.openingBalance = const Value.absent(),
+    this.closingBalance = const Value.absent(),
+    this.totalCashSales = const Value.absent(),
+    this.totalCardSales = const Value.absent(),
+    this.totalGiftCardSales = const Value.absent(),
+    this.totalOtherSales = const Value.absent(),
+    this.status = const Value.absent(),
+    this.openedBy = const Value.absent(),
+    this.closedBy = const Value.absent(),
+    this.discrepancy = const Value.absent(),
+  });
+  BusinessDaysCompanion.insert({
+    this.id = const Value.absent(),
+    this.openTime = const Value.absent(),
+    this.closeTime = const Value.absent(),
+    required double openingBalance,
+    this.closingBalance = const Value.absent(),
+    this.totalCashSales = const Value.absent(),
+    this.totalCardSales = const Value.absent(),
+    this.totalGiftCardSales = const Value.absent(),
+    this.totalOtherSales = const Value.absent(),
+    this.status = const Value.absent(),
+    this.openedBy = const Value.absent(),
+    this.closedBy = const Value.absent(),
+    this.discrepancy = const Value.absent(),
+  }) : openingBalance = Value(openingBalance);
+  static Insertable<BusinessDay> custom({
+    Expression<int>? id,
+    Expression<DateTime>? openTime,
+    Expression<DateTime>? closeTime,
+    Expression<double>? openingBalance,
+    Expression<double>? closingBalance,
+    Expression<double>? totalCashSales,
+    Expression<double>? totalCardSales,
+    Expression<double>? totalGiftCardSales,
+    Expression<double>? totalOtherSales,
+    Expression<String>? status,
+    Expression<String>? openedBy,
+    Expression<String>? closedBy,
+    Expression<double>? discrepancy,
+  }) {
+    return RawValuesInsertable({
+      if (id != null) 'id': id,
+      if (openTime != null) 'open_time': openTime,
+      if (closeTime != null) 'close_time': closeTime,
+      if (openingBalance != null) 'opening_balance': openingBalance,
+      if (closingBalance != null) 'closing_balance': closingBalance,
+      if (totalCashSales != null) 'total_cash_sales': totalCashSales,
+      if (totalCardSales != null) 'total_card_sales': totalCardSales,
+      if (totalGiftCardSales != null)
+        'total_gift_card_sales': totalGiftCardSales,
+      if (totalOtherSales != null) 'total_other_sales': totalOtherSales,
+      if (status != null) 'status': status,
+      if (openedBy != null) 'opened_by': openedBy,
+      if (closedBy != null) 'closed_by': closedBy,
+      if (discrepancy != null) 'discrepancy': discrepancy,
+    });
+  }
+
+  BusinessDaysCompanion copyWith(
+      {Value<int>? id,
+      Value<DateTime>? openTime,
+      Value<DateTime?>? closeTime,
+      Value<double>? openingBalance,
+      Value<double?>? closingBalance,
+      Value<double>? totalCashSales,
+      Value<double>? totalCardSales,
+      Value<double>? totalGiftCardSales,
+      Value<double>? totalOtherSales,
+      Value<String>? status,
+      Value<String?>? openedBy,
+      Value<String?>? closedBy,
+      Value<double?>? discrepancy}) {
+    return BusinessDaysCompanion(
+      id: id ?? this.id,
+      openTime: openTime ?? this.openTime,
+      closeTime: closeTime ?? this.closeTime,
+      openingBalance: openingBalance ?? this.openingBalance,
+      closingBalance: closingBalance ?? this.closingBalance,
+      totalCashSales: totalCashSales ?? this.totalCashSales,
+      totalCardSales: totalCardSales ?? this.totalCardSales,
+      totalGiftCardSales: totalGiftCardSales ?? this.totalGiftCardSales,
+      totalOtherSales: totalOtherSales ?? this.totalOtherSales,
+      status: status ?? this.status,
+      openedBy: openedBy ?? this.openedBy,
+      closedBy: closedBy ?? this.closedBy,
+      discrepancy: discrepancy ?? this.discrepancy,
+    );
+  }
+
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    if (id.present) {
+      map['id'] = Variable<int>(id.value);
+    }
+    if (openTime.present) {
+      map['open_time'] = Variable<DateTime>(openTime.value);
+    }
+    if (closeTime.present) {
+      map['close_time'] = Variable<DateTime>(closeTime.value);
+    }
+    if (openingBalance.present) {
+      map['opening_balance'] = Variable<double>(openingBalance.value);
+    }
+    if (closingBalance.present) {
+      map['closing_balance'] = Variable<double>(closingBalance.value);
+    }
+    if (totalCashSales.present) {
+      map['total_cash_sales'] = Variable<double>(totalCashSales.value);
+    }
+    if (totalCardSales.present) {
+      map['total_card_sales'] = Variable<double>(totalCardSales.value);
+    }
+    if (totalGiftCardSales.present) {
+      map['total_gift_card_sales'] = Variable<double>(totalGiftCardSales.value);
+    }
+    if (totalOtherSales.present) {
+      map['total_other_sales'] = Variable<double>(totalOtherSales.value);
+    }
+    if (status.present) {
+      map['status'] = Variable<String>(status.value);
+    }
+    if (openedBy.present) {
+      map['opened_by'] = Variable<String>(openedBy.value);
+    }
+    if (closedBy.present) {
+      map['closed_by'] = Variable<String>(closedBy.value);
+    }
+    if (discrepancy.present) {
+      map['discrepancy'] = Variable<double>(discrepancy.value);
+    }
+    return map;
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('BusinessDaysCompanion(')
+          ..write('id: $id, ')
+          ..write('openTime: $openTime, ')
+          ..write('closeTime: $closeTime, ')
+          ..write('openingBalance: $openingBalance, ')
+          ..write('closingBalance: $closingBalance, ')
+          ..write('totalCashSales: $totalCashSales, ')
+          ..write('totalCardSales: $totalCardSales, ')
+          ..write('totalGiftCardSales: $totalGiftCardSales, ')
+          ..write('totalOtherSales: $totalOtherSales, ')
+          ..write('status: $status, ')
+          ..write('openedBy: $openedBy, ')
+          ..write('closedBy: $closedBy, ')
+          ..write('discrepancy: $discrepancy')
+          ..write(')'))
+        .toString();
+  }
+}
+
 abstract class _$AppDatabase extends GeneratedDatabase {
   _$AppDatabase(QueryExecutor e) : super(e);
   $AppDatabaseManager get managers => $AppDatabaseManager(this);
   late final $ProductsTable products = $ProductsTable(this);
   late final $SalesTable sales = $SalesTable(this);
   late final $SaleItemsTable saleItems = $SaleItemsTable(this);
+  late final $BusinessDaysTable businessDays = $BusinessDaysTable(this);
   @override
   Iterable<TableInfo<Table, Object?>> get allTables =>
       allSchemaEntities.whereType<TableInfo<Table, Object?>>();
   @override
   List<DatabaseSchemaEntity> get allSchemaEntities =>
-      [products, sales, saleItems];
+      [products, sales, saleItems, businessDays];
 }
 
 typedef $$ProductsTableCreateCompanionBuilder = ProductsCompanion Function({
@@ -1964,6 +2614,305 @@ typedef $$SaleItemsTableProcessedTableManager = ProcessedTableManager<
     (SaleItem, $$SaleItemsTableReferences),
     SaleItem,
     PrefetchHooks Function({bool saleId, bool productId})>;
+typedef $$BusinessDaysTableCreateCompanionBuilder = BusinessDaysCompanion
+    Function({
+  Value<int> id,
+  Value<DateTime> openTime,
+  Value<DateTime?> closeTime,
+  required double openingBalance,
+  Value<double?> closingBalance,
+  Value<double> totalCashSales,
+  Value<double> totalCardSales,
+  Value<double> totalGiftCardSales,
+  Value<double> totalOtherSales,
+  Value<String> status,
+  Value<String?> openedBy,
+  Value<String?> closedBy,
+  Value<double?> discrepancy,
+});
+typedef $$BusinessDaysTableUpdateCompanionBuilder = BusinessDaysCompanion
+    Function({
+  Value<int> id,
+  Value<DateTime> openTime,
+  Value<DateTime?> closeTime,
+  Value<double> openingBalance,
+  Value<double?> closingBalance,
+  Value<double> totalCashSales,
+  Value<double> totalCardSales,
+  Value<double> totalGiftCardSales,
+  Value<double> totalOtherSales,
+  Value<String> status,
+  Value<String?> openedBy,
+  Value<String?> closedBy,
+  Value<double?> discrepancy,
+});
+
+class $$BusinessDaysTableFilterComposer
+    extends Composer<_$AppDatabase, $BusinessDaysTable> {
+  $$BusinessDaysTableFilterComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  ColumnFilters<int> get id => $composableBuilder(
+      column: $table.id, builder: (column) => ColumnFilters(column));
+
+  ColumnFilters<DateTime> get openTime => $composableBuilder(
+      column: $table.openTime, builder: (column) => ColumnFilters(column));
+
+  ColumnFilters<DateTime> get closeTime => $composableBuilder(
+      column: $table.closeTime, builder: (column) => ColumnFilters(column));
+
+  ColumnFilters<double> get openingBalance => $composableBuilder(
+      column: $table.openingBalance,
+      builder: (column) => ColumnFilters(column));
+
+  ColumnFilters<double> get closingBalance => $composableBuilder(
+      column: $table.closingBalance,
+      builder: (column) => ColumnFilters(column));
+
+  ColumnFilters<double> get totalCashSales => $composableBuilder(
+      column: $table.totalCashSales,
+      builder: (column) => ColumnFilters(column));
+
+  ColumnFilters<double> get totalCardSales => $composableBuilder(
+      column: $table.totalCardSales,
+      builder: (column) => ColumnFilters(column));
+
+  ColumnFilters<double> get totalGiftCardSales => $composableBuilder(
+      column: $table.totalGiftCardSales,
+      builder: (column) => ColumnFilters(column));
+
+  ColumnFilters<double> get totalOtherSales => $composableBuilder(
+      column: $table.totalOtherSales,
+      builder: (column) => ColumnFilters(column));
+
+  ColumnFilters<String> get status => $composableBuilder(
+      column: $table.status, builder: (column) => ColumnFilters(column));
+
+  ColumnFilters<String> get openedBy => $composableBuilder(
+      column: $table.openedBy, builder: (column) => ColumnFilters(column));
+
+  ColumnFilters<String> get closedBy => $composableBuilder(
+      column: $table.closedBy, builder: (column) => ColumnFilters(column));
+
+  ColumnFilters<double> get discrepancy => $composableBuilder(
+      column: $table.discrepancy, builder: (column) => ColumnFilters(column));
+}
+
+class $$BusinessDaysTableOrderingComposer
+    extends Composer<_$AppDatabase, $BusinessDaysTable> {
+  $$BusinessDaysTableOrderingComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  ColumnOrderings<int> get id => $composableBuilder(
+      column: $table.id, builder: (column) => ColumnOrderings(column));
+
+  ColumnOrderings<DateTime> get openTime => $composableBuilder(
+      column: $table.openTime, builder: (column) => ColumnOrderings(column));
+
+  ColumnOrderings<DateTime> get closeTime => $composableBuilder(
+      column: $table.closeTime, builder: (column) => ColumnOrderings(column));
+
+  ColumnOrderings<double> get openingBalance => $composableBuilder(
+      column: $table.openingBalance,
+      builder: (column) => ColumnOrderings(column));
+
+  ColumnOrderings<double> get closingBalance => $composableBuilder(
+      column: $table.closingBalance,
+      builder: (column) => ColumnOrderings(column));
+
+  ColumnOrderings<double> get totalCashSales => $composableBuilder(
+      column: $table.totalCashSales,
+      builder: (column) => ColumnOrderings(column));
+
+  ColumnOrderings<double> get totalCardSales => $composableBuilder(
+      column: $table.totalCardSales,
+      builder: (column) => ColumnOrderings(column));
+
+  ColumnOrderings<double> get totalGiftCardSales => $composableBuilder(
+      column: $table.totalGiftCardSales,
+      builder: (column) => ColumnOrderings(column));
+
+  ColumnOrderings<double> get totalOtherSales => $composableBuilder(
+      column: $table.totalOtherSales,
+      builder: (column) => ColumnOrderings(column));
+
+  ColumnOrderings<String> get status => $composableBuilder(
+      column: $table.status, builder: (column) => ColumnOrderings(column));
+
+  ColumnOrderings<String> get openedBy => $composableBuilder(
+      column: $table.openedBy, builder: (column) => ColumnOrderings(column));
+
+  ColumnOrderings<String> get closedBy => $composableBuilder(
+      column: $table.closedBy, builder: (column) => ColumnOrderings(column));
+
+  ColumnOrderings<double> get discrepancy => $composableBuilder(
+      column: $table.discrepancy, builder: (column) => ColumnOrderings(column));
+}
+
+class $$BusinessDaysTableAnnotationComposer
+    extends Composer<_$AppDatabase, $BusinessDaysTable> {
+  $$BusinessDaysTableAnnotationComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  GeneratedColumn<int> get id =>
+      $composableBuilder(column: $table.id, builder: (column) => column);
+
+  GeneratedColumn<DateTime> get openTime =>
+      $composableBuilder(column: $table.openTime, builder: (column) => column);
+
+  GeneratedColumn<DateTime> get closeTime =>
+      $composableBuilder(column: $table.closeTime, builder: (column) => column);
+
+  GeneratedColumn<double> get openingBalance => $composableBuilder(
+      column: $table.openingBalance, builder: (column) => column);
+
+  GeneratedColumn<double> get closingBalance => $composableBuilder(
+      column: $table.closingBalance, builder: (column) => column);
+
+  GeneratedColumn<double> get totalCashSales => $composableBuilder(
+      column: $table.totalCashSales, builder: (column) => column);
+
+  GeneratedColumn<double> get totalCardSales => $composableBuilder(
+      column: $table.totalCardSales, builder: (column) => column);
+
+  GeneratedColumn<double> get totalGiftCardSales => $composableBuilder(
+      column: $table.totalGiftCardSales, builder: (column) => column);
+
+  GeneratedColumn<double> get totalOtherSales => $composableBuilder(
+      column: $table.totalOtherSales, builder: (column) => column);
+
+  GeneratedColumn<String> get status =>
+      $composableBuilder(column: $table.status, builder: (column) => column);
+
+  GeneratedColumn<String> get openedBy =>
+      $composableBuilder(column: $table.openedBy, builder: (column) => column);
+
+  GeneratedColumn<String> get closedBy =>
+      $composableBuilder(column: $table.closedBy, builder: (column) => column);
+
+  GeneratedColumn<double> get discrepancy => $composableBuilder(
+      column: $table.discrepancy, builder: (column) => column);
+}
+
+class $$BusinessDaysTableTableManager extends RootTableManager<
+    _$AppDatabase,
+    $BusinessDaysTable,
+    BusinessDay,
+    $$BusinessDaysTableFilterComposer,
+    $$BusinessDaysTableOrderingComposer,
+    $$BusinessDaysTableAnnotationComposer,
+    $$BusinessDaysTableCreateCompanionBuilder,
+    $$BusinessDaysTableUpdateCompanionBuilder,
+    (
+      BusinessDay,
+      BaseReferences<_$AppDatabase, $BusinessDaysTable, BusinessDay>
+    ),
+    BusinessDay,
+    PrefetchHooks Function()> {
+  $$BusinessDaysTableTableManager(_$AppDatabase db, $BusinessDaysTable table)
+      : super(TableManagerState(
+          db: db,
+          table: table,
+          createFilteringComposer: () =>
+              $$BusinessDaysTableFilterComposer($db: db, $table: table),
+          createOrderingComposer: () =>
+              $$BusinessDaysTableOrderingComposer($db: db, $table: table),
+          createComputedFieldComposer: () =>
+              $$BusinessDaysTableAnnotationComposer($db: db, $table: table),
+          updateCompanionCallback: ({
+            Value<int> id = const Value.absent(),
+            Value<DateTime> openTime = const Value.absent(),
+            Value<DateTime?> closeTime = const Value.absent(),
+            Value<double> openingBalance = const Value.absent(),
+            Value<double?> closingBalance = const Value.absent(),
+            Value<double> totalCashSales = const Value.absent(),
+            Value<double> totalCardSales = const Value.absent(),
+            Value<double> totalGiftCardSales = const Value.absent(),
+            Value<double> totalOtherSales = const Value.absent(),
+            Value<String> status = const Value.absent(),
+            Value<String?> openedBy = const Value.absent(),
+            Value<String?> closedBy = const Value.absent(),
+            Value<double?> discrepancy = const Value.absent(),
+          }) =>
+              BusinessDaysCompanion(
+            id: id,
+            openTime: openTime,
+            closeTime: closeTime,
+            openingBalance: openingBalance,
+            closingBalance: closingBalance,
+            totalCashSales: totalCashSales,
+            totalCardSales: totalCardSales,
+            totalGiftCardSales: totalGiftCardSales,
+            totalOtherSales: totalOtherSales,
+            status: status,
+            openedBy: openedBy,
+            closedBy: closedBy,
+            discrepancy: discrepancy,
+          ),
+          createCompanionCallback: ({
+            Value<int> id = const Value.absent(),
+            Value<DateTime> openTime = const Value.absent(),
+            Value<DateTime?> closeTime = const Value.absent(),
+            required double openingBalance,
+            Value<double?> closingBalance = const Value.absent(),
+            Value<double> totalCashSales = const Value.absent(),
+            Value<double> totalCardSales = const Value.absent(),
+            Value<double> totalGiftCardSales = const Value.absent(),
+            Value<double> totalOtherSales = const Value.absent(),
+            Value<String> status = const Value.absent(),
+            Value<String?> openedBy = const Value.absent(),
+            Value<String?> closedBy = const Value.absent(),
+            Value<double?> discrepancy = const Value.absent(),
+          }) =>
+              BusinessDaysCompanion.insert(
+            id: id,
+            openTime: openTime,
+            closeTime: closeTime,
+            openingBalance: openingBalance,
+            closingBalance: closingBalance,
+            totalCashSales: totalCashSales,
+            totalCardSales: totalCardSales,
+            totalGiftCardSales: totalGiftCardSales,
+            totalOtherSales: totalOtherSales,
+            status: status,
+            openedBy: openedBy,
+            closedBy: closedBy,
+            discrepancy: discrepancy,
+          ),
+          withReferenceMapper: (p0) => p0
+              .map((e) => (e.readTable(table), BaseReferences(db, table, e)))
+              .toList(),
+          prefetchHooksCallback: null,
+        ));
+}
+
+typedef $$BusinessDaysTableProcessedTableManager = ProcessedTableManager<
+    _$AppDatabase,
+    $BusinessDaysTable,
+    BusinessDay,
+    $$BusinessDaysTableFilterComposer,
+    $$BusinessDaysTableOrderingComposer,
+    $$BusinessDaysTableAnnotationComposer,
+    $$BusinessDaysTableCreateCompanionBuilder,
+    $$BusinessDaysTableUpdateCompanionBuilder,
+    (
+      BusinessDay,
+      BaseReferences<_$AppDatabase, $BusinessDaysTable, BusinessDay>
+    ),
+    BusinessDay,
+    PrefetchHooks Function()>;
 
 class $AppDatabaseManager {
   final _$AppDatabase _db;
@@ -1974,4 +2923,6 @@ class $AppDatabaseManager {
       $$SalesTableTableManager(_db, _db.sales);
   $$SaleItemsTableTableManager get saleItems =>
       $$SaleItemsTableTableManager(_db, _db.saleItems);
+  $$BusinessDaysTableTableManager get businessDays =>
+      $$BusinessDaysTableTableManager(_db, _db.businessDays);
 }

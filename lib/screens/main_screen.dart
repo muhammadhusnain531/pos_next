@@ -10,6 +10,8 @@ import 'package:posnext/salereportpage.dart';
 import 'package:posnext/stockdetailspage.dart';
 import 'package:posnext/addproductscreen.dart';
 import 'package:posnext/customerdetailsscreen.dart';
+import '../screns/business_screens/day_opening_screen.dart';
+import '../screns/business_screens/day_closing_screen.dart';
 
 class MainSaleScreen extends StatefulWidget {
   const MainSaleScreen({super.key});
@@ -491,7 +493,26 @@ class _MainSaleScreenState extends State<MainSaleScreen> {
                     PosButton(
                       label: "Day/Opening Closing", 
                       color: Colors.grey[700]!,
-                      onTap: () {}, 
+                      onTap: () async {
+                        final database = Provider.of<AppDatabase>(context, listen: false);
+                        final currentDay = await database.getCurrentBusinessDay();
+
+                        if (!context.mounted) return;
+
+                        if (currentDay == null) {
+                          // Day is closed, open it
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(builder: (context) => const DayOpeningScreen()),
+                          );
+                        } else {
+                          // Day is open, close it
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(builder: (context) => const DayClosingScreen()),
+                          );
+                        }
+                      }, 
                     ),
                     PosButton(
                       label: "Return", 
