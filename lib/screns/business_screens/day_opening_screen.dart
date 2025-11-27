@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../../services/database_service.dart';
+import '../../services/auth_service.dart';
 
 class DayOpeningScreen extends StatefulWidget {
   const DayOpeningScreen({super.key});
@@ -35,7 +36,15 @@ class _DayOpeningScreenState extends State<DayOpeningScreen> {
       final double floatAmount = double.parse(_floatController.text);
       final database = Provider.of<AppDatabase>(context, listen: false);
       
-      await database.openBusinessDay(floatAmount, 'Admin'); // TODO: Replace 'Admin' with actual user if available
+      final authService = Provider.of<AuthService>(context, listen: false);
+      final user = authService.currentUser;
+      final branch = authService.currentBranch;
+
+      if (branch == null) {
+        throw Exception("No active branch found for current user.");
+      }
+
+      await database.openBusinessDay(branch.id, floatAmount, user?.username ?? 'Admin');
 
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(

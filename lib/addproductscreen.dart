@@ -1,7 +1,8 @@
-import 'package:drift/drift.dart' hide Column;
+import 'package:drift/drift.dart' as drift;
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:posnext/services/database_service.dart';
+import 'package:posnext/services/auth_service.dart';
 
 class AddProductScreen extends StatefulWidget {
   const AddProductScreen({super.key});
@@ -29,6 +30,15 @@ class _AddProductScreenState extends State<AddProductScreen> {
 
   Future<void> _saveProduct() async {
     final db = Provider.of<AppDatabase>(context, listen: false);
+    final authService = Provider.of<AuthService>(context, listen: false);
+
+    if (authService.currentBranch == null) {
+      if (!mounted) return;
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text("Error: No active branch selected.")),
+      );
+      return;
+    }
 
     // Validation
     if (_nameController.text.isEmpty ||
@@ -58,11 +68,12 @@ class _AddProductScreenState extends State<AddProductScreen> {
 
       // Create new product
       final newProduct = ProductsCompanion(
-        name: Value(_nameController.text),
-        barcode: Value(_barcodeController.text),
-       // description: Value(_descriptionController.text.isNotEmpty ? _descriptionController.text : ''),
-        price: Value(double.tryParse(_priceController.text) ?? 0.0),
-        quantity: Value(int.tryParse(_quantityController.text) ?? 0),
+        branchId: drift.Value(authService.currentBranch!.id),
+        name: drift.Value(_nameController.text),
+        barcode: drift.Value(_barcodeController.text),
+       // description: drift.Value(_descriptionController.text.isNotEmpty ? _descriptionController.text : ''),
+        price: drift.Value(double.tryParse(_priceController.text) ?? 0.0),
+        quantity: drift.Value(int.tryParse(_quantityController.text) ?? 0),
       );
 
       await db.addProduct(newProduct);

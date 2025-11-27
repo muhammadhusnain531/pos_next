@@ -3,11 +3,42 @@ import 'connection/connection.dart';
 
 part 'database_service.g.dart';
 
+// Companies Table (Super Admin Level)
+class Companies extends Table {
+  IntColumn get id => integer().autoIncrement()();
+  TextColumn get name => text().withLength(min: 1, max: 255)();
+  TextColumn get address => text().nullable()();
+  TextColumn get contact => text().nullable()();
+  DateTimeColumn get createdAt => dateTime().withDefault(currentDateAndTime)();
+}
+
+// Branches Table (Company Level)
+class Branches extends Table {
+  IntColumn get id => integer().autoIncrement()();
+  IntColumn get companyId => integer().references(Companies, #id)();
+  TextColumn get name => text().withLength(min: 1, max: 255)();
+  TextColumn get address => text().nullable()();
+  TextColumn get contact => text().nullable()();
+  DateTimeColumn get createdAt => dateTime().withDefault(currentDateAndTime)();
+}
+
+// Users Table (Role Based Access)
+class Users extends Table {
+  IntColumn get id => integer().autoIncrement()();
+  IntColumn get branchId => integer().nullable().references(Branches, #id)(); // Nullable for SuperAdmin
+  TextColumn get username => text().unique()();
+  TextColumn get password => text()(); // Hashed
+  TextColumn get role => text()(); // 'SuperAdmin', 'BranchAdmin', 'User'
+  TextColumn get name => text().nullable()();
+  BoolColumn get isActive => boolean().withDefault(const Constant(true))();
+}
+
 // Products Table
 class Products extends Table {
   IntColumn get id => integer().autoIncrement()();
+  IntColumn get branchId => integer().references(Branches, #id)(); // Stock is per branch
   TextColumn get name => text().withLength(min: 1, max: 255)();
-  TextColumn get barcode => text().withLength(min: 1, max: 50)(); // Scan this
+  TextColumn get barcode => text().withLength(min: 1, max: 50)(); 
   TextColumn get category => text().nullable()();
   IntColumn get quantity => integer().withDefault(const Constant(0))();
   RealColumn get price => real()();
@@ -18,10 +49,12 @@ class Products extends Table {
 // Sales Table
 class Sales extends Table {
   IntColumn get id => integer().autoIncrement()();
+  IntColumn get branchId => integer().references(Branches, #id)();
+  IntColumn get userId => integer().nullable().references(Users, #id)();
   TextColumn get invoiceNumber => text()();
   RealColumn get totalAmount => real()();
   RealColumn get discount => real().withDefault(const Constant(0.0))();
-  TextColumn get paymentMethod => text()(); // Cash, Card, etc.
+  TextColumn get paymentMethod => text()(); 
   DateTimeColumn get date => dateTime().withDefault(currentDateAndTime)();
 }
 
@@ -31,32 +64,33 @@ class SaleItems extends Table {
   IntColumn get saleId => integer().references(Sales, #id)();
   IntColumn get productId => integer().references(Products, #id)();
   IntColumn get quantity => integer()();
-  RealColumn get price => real()(); // Snapshot price at time of sale
+  RealColumn get price => real()(); 
 }
 
 // Business Days Table
 class BusinessDays extends Table {
   IntColumn get id => integer().autoIncrement()();
+  IntColumn get branchId => integer().references(Branches, #id)();
   DateTimeColumn get openTime => dateTime().withDefault(currentDateAndTime)();
   DateTimeColumn get closeTime => dateTime().nullable()();
   RealColumn get openingBalance => real()();
   RealColumn get closingBalance => real().nullable()();
   RealColumn get totalCashSales => real().withDefault(const Constant(0.0))();
   RealColumn get totalCardSales => real().withDefault(const Constant(0.0))();
-  RealColumn get totalGiftCardSales => real().withDefault(const Constant(0.0))(); // New
-  RealColumn get totalOtherSales => real().withDefault(const Constant(0.0))(); // New
-  TextColumn get status => text().withDefault(const Constant('Open'))(); // Open, Closed
+  RealColumn get totalGiftCardSales => real().withDefault(const Constant(0.0))(); 
+  RealColumn get totalOtherSales => real().withDefault(const Constant(0.0))(); 
+  TextColumn get status => text().withDefault(const Constant('Open'))(); 
   TextColumn get openedBy => text().nullable()();
   TextColumn get closedBy => text().nullable()();
   RealColumn get discrepancy => real().nullable()();
 }
 
-@DriftDatabase(tables: [Products, Sales, SaleItems, BusinessDays])
+@DriftDatabase(tables: [Products, Sales, SaleItems, BusinessDays, Companies, Branches, Users])
 class AppDatabase extends _$AppDatabase {
   AppDatabase() : super(openConnection());
 
   @override
-  int get schemaVersion => 3; // Incremented to 3
+  int get schemaVersion => 4; // Incremented to 4
 
   @override
   MigrationStrategy get migration {
@@ -71,6 +105,18 @@ class AppDatabase extends _$AppDatabase {
         if (from < 3) {
           await m.addColumn(businessDays, businessDays.totalGiftCardSales);
           await m.addColumn(businessDays, businessDays.totalOtherSales);
+        }
+        if (from < 4) {
+          // Create new tables
+          await m.createTable(companies);
+          await m.createTable(branches);
+          await m.createTable(users);
+
+          // Add columns to existing tables
+          await m.addColumn(products, products.branchId);
+          await m.addColumn(sales, sales.branchId);
+          await m.addColumn(sales, sales.userId);
+          await m.addColumn(businessDays, businessDays.branchId);
         }
       },
     );
@@ -177,8 +223,9 @@ class AppDatabase extends _$AppDatabase {
   }
 
   // --- Business Day Queries ---
-  Future<int> openBusinessDay(double openingBalance, String? user) {
+  Future<int> openBusinessDay(int branchId, double openingBalance, String? user) {
     return into(businessDays).insert(BusinessDaysCompanion(
+      branchId: Value(branchId),
       openingBalance: Value(openingBalance),
       openedBy: Value(user),
       status: Value('Open'),
@@ -203,4 +250,64 @@ class AppDatabase extends _$AppDatabase {
       ..limit(1)
     ).getSingleOrNull();
   }
+
+  // --- Auth Queries ---
+  Future<bool> hasAnyUser() async {
+    final user = await (select(users)..limit(1)).getSingleOrNull();
+    return user != null;
+  }
+
+  Future<int> createSuperAdmin(String username, String password) {
+    return into(users).insert(UsersCompanion(
+      username: Value(username),
+      password: Value(password), // In real app, hash this!
+      role: Value('SuperAdmin'),
+      isActive: Value(true),
+    ));
+  }
+
+  // --- Admin Queries ---
+  Future<List<Branche>> getAllBranches() => select(branches).get();
+  
+  Future<List<User>> getAllUsers() => select(users).get();
+
+  Future<void> createBranchWithAdmin({
+    required String branchName,
+    required String branchAddress,
+    required String adminUsername,
+    required String adminPassword,
+  }) {
+    return transaction(() async {
+      // 1. Create Company if not exists (Simplified: assuming single company for now)
+      // For now, we'll just create a dummy company if table is empty
+      final companiesList = await select(companies).get();
+      int companyId;
+      if (companiesList.isEmpty) {
+        companyId = await into(companies).insert(CompaniesCompanion(
+          name: Value('Main Company'),
+          address: Value('Headquarters'),
+        ));
+      } else {
+        companyId = companiesList.first.id;
+      }
+
+      // 2. Create Branch
+      final branchId = await into(branches).insert(BranchesCompanion(
+        companyId: Value(companyId),
+        name: Value(branchName),
+        address: Value(branchAddress),
+      ));
+
+      // 3. Create Branch Admin
+      await into(users).insert(UsersCompanion(
+        branchId: Value(branchId),
+        username: Value(adminUsername),
+        password: Value(adminPassword),
+        role: Value('BranchAdmin'),
+        isActive: Value(true),
+      ));
+    });
+  }
+
+  Future<int> createUser(UsersCompanion user) => into(users).insert(user);
 }
