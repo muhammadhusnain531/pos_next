@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:posnext/services/database_service.dart';
+import 'package:posnext/services/auth_service.dart';
 
 class SaleReportPage extends StatefulWidget {
   const SaleReportPage({Key? key}) : super(key: key);
@@ -16,6 +17,12 @@ class _SaleReportPageState extends State<SaleReportPage> {
   @override
   Widget build(BuildContext context) {
     final db = Provider.of<AppDatabase>(context);
+
+    final auth = Provider.of<AuthService>(context, listen: false);
+    
+    if (auth.currentBranch == null) {
+      return const Scaffold(body: Center(child: Text("No active branch")));
+    }
 
     return Scaffold(
       backgroundColor: const Color(0xFFF5F7FA),
@@ -39,7 +46,7 @@ class _SaleReportPageState extends State<SaleReportPage> {
       body: Padding(
         padding: const EdgeInsets.all(24.0),
         child: FutureBuilder<List<Sale>>(
-          future: db.getSalesByDateRange(_startDate, _endDate),
+          future: db.getSalesByDateRange(auth.currentBranch!.id, _startDate, _endDate),
           builder: (context, snapshot) {
             if (snapshot.connectionState == ConnectionState.waiting) {
               return const Center(child: CircularProgressIndicator());

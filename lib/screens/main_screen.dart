@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:drift/drift.dart' as drift; // Alias for drift columns/values
 import 'package:posnext/services/database_service.dart';
+import 'package:posnext/services/auth_service.dart';
 import 'package:posnext/paybycashpage.dart';
 import 'package:posnext/paybycardpage.dart';
 import 'package:posnext/giftcardscreen.dart';
@@ -243,9 +244,19 @@ class _MainSaleScreenState extends State<MainSaleScreen> {
     }
 
     if (paymentSuccess) {
+      final auth = Provider.of<AuthService>(context, listen: false);
+      if (auth.currentBranch == null) {
+         ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text("Error: No active branch linked to user.")),
+        );
+        return;
+      }
+
       // Save to DB
       final saleId = await db.createSale(
         SalesCompanion(
+          branchId: drift.Value(auth.currentBranch!.id),
+          userId: drift.Value(auth.currentUser?.id),
           invoiceNumber: drift.Value(_invoiceId),
           totalAmount: drift.Value(_totalAmount),
           discount: drift.Value(_discountAmount),
@@ -496,7 +507,12 @@ class _MainSaleScreenState extends State<MainSaleScreen> {
                       onTap: () async {
                         try {
                           final database = Provider.of<AppDatabase>(context, listen: false);
-                          final currentDay = await database.getCurrentBusinessDay();
+                          final auth = Provider.of<AuthService>(context, listen: false);
+                          if (auth.currentBranch == null) {
+                             ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text("No active branch")));
+                             return;
+                          }
+                          final currentDay = await database.getCurrentBusinessDay(auth.currentBranch!.id);
 
                           if (!context.mounted) return;
 

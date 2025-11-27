@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../../services/database_service.dart';
+import '../../services/auth_service.dart';
 
 class DayClosingScreen extends StatefulWidget {
   const DayClosingScreen({super.key});
@@ -33,19 +34,18 @@ class _DayClosingScreenState extends State<DayClosingScreen> {
     setState(() => isLoading = true);
     try {
       final database = Provider.of<AppDatabase>(context, listen: false);
-      final day = await database.getCurrentBusinessDay();
+      final auth = Provider.of<AuthService>(context, listen: false);
+      
+      if (auth.currentBranch == null) {
+        throw Exception("No active branch found.");
+      }
+
+      final day = await database.getCurrentBusinessDay(auth.currentBranch!.id);
 
       if (day != null) {
-        print("DEBUG: Day Loaded: ${day.toJson()}");
-        print("DEBUG: Opening Balance: ${day.openingBalance}");
-        print("DEBUG: Total Cash Sales: ${day.totalCashSales}");
-        print("DEBUG: Total Card Sales: ${day.totalCardSales}");
-
         setState(() {
           _currentDay = day;
-          // Expected Cash = Opening Balance + Cash Sales
           _expectedCash = day.openingBalance + day.totalCashSales;
-          print("DEBUG: Expected Cash Calculated: $_expectedCash");
           _calculateDiscrepancy();
         });
       }
@@ -84,12 +84,13 @@ class _DayClosingScreenState extends State<DayClosingScreen> {
     try {
       final double countedCash = double.parse(_countedCashController.text);
       final database = Provider.of<AppDatabase>(context, listen: false);
+      final auth = Provider.of<AuthService>(context, listen: false);
 
       await database.closeBusinessDay(
         _currentDay!.id,
         countedCash,
         _discrepancy,
-        'Admin', // TODO: Replace with actual user
+        auth.currentUser?.username ?? 'Admin',
       );
 
       if (mounted) {

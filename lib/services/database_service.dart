@@ -176,7 +176,7 @@ class AppDatabase extends _$AppDatabase {
       }
       
       // Update current business day sales
-      final currentDay = await getCurrentBusinessDay();
+      final currentDay = await getCurrentBusinessDay(sale.branchId.value);
       if (currentDay != null) {
         double saleAmount = sale.totalAmount.value;
         final method = sale.paymentMethod.value;
@@ -218,8 +218,10 @@ class AppDatabase extends _$AppDatabase {
   Future<List<Sale>> getAllSales() => select(sales).get();
   
   // Report Query: Get sales between dates
-  Future<List<Sale>> getSalesByDateRange(DateTime start, DateTime end) {
-    return (select(sales)..where((tbl) => tbl.date.isBetweenValues(start, end))).get();
+  Future<List<Sale>> getSalesByDateRange(int branchId, DateTime start, DateTime end) {
+    return (select(sales)
+      ..where((tbl) => tbl.branchId.equals(branchId) & tbl.date.isBetweenValues(start, end))
+    ).get();
   }
 
   // --- Business Day Queries ---
@@ -243,9 +245,9 @@ class AppDatabase extends _$AppDatabase {
     ));
   }
 
-  Future<BusinessDay?> getCurrentBusinessDay() {
+  Future<BusinessDay?> getCurrentBusinessDay(int branchId) {
     return (select(businessDays)
-      ..where((t) => t.status.equals('Open'))
+      ..where((t) => t.branchId.equals(branchId) & t.status.equals('Open'))
       ..orderBy([(t) => OrderingTerm.desc(t.openTime)])
       ..limit(1)
     ).getSingleOrNull();
