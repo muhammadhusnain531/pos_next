@@ -494,22 +494,26 @@ class _MainSaleScreenState extends State<MainSaleScreen> {
                       label: "Day/Opening Closing", 
                       color: Colors.grey[700]!,
                       onTap: () async {
-                        final database = Provider.of<AppDatabase>(context, listen: false);
-                        final currentDay = await database.getCurrentBusinessDay();
+                        try {
+                          final database = Provider.of<AppDatabase>(context, listen: false);
+                          final currentDay = await database.getCurrentBusinessDay();
 
-                        if (!context.mounted) return;
+                          if (!context.mounted) return;
 
-                        if (currentDay == null) {
-                          // Day is closed, open it
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(builder: (context) => const DayOpeningScreen()),
-                          );
-                        } else {
-                          // Day is open, close it
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(builder: (context) => const DayClosingScreen()),
+                          if (currentDay == null) {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(builder: (context) => const DayOpeningScreen()),
+                            );
+                          } else {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(builder: (context) => const DayClosingScreen()),
+                            );
+                          }
+                        } catch (e) {
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            SnackBar(content: Text("Error: $e")),
                           );
                         }
                       }, 
