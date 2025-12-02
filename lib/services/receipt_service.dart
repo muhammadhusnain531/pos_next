@@ -164,7 +164,7 @@ class ReceiptService {
   pw.Widget _buildDottedLine() {
     return pw.Padding(
       padding: const pw.EdgeInsets.symmetric(vertical: 5),
-      child: pw.Divider(style: pw.BorderStyle.dotted, thickness: 0.5),
+      child: pw.Divider(borderStyle: pw.BorderStyle.dotted, thickness: 0.5),
     );
   }
 }
