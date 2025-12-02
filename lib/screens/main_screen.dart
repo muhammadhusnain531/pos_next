@@ -12,7 +12,10 @@ import 'package:posnext/stockdetailspage.dart';
 import 'package:posnext/addproductscreen.dart';
 import 'package:posnext/customerdetailsscreen.dart';
 import '../screns/business_screens/day_opening_screen.dart';
+import '../screns/business_screens/day_opening_screen.dart';
 import '../screns/business_screens/day_closing_screen.dart';
+import 'package:posnext/services/receipt_service.dart';
+import 'package:posnext/services/printer_service.dart';
 
 class MainSaleScreen extends StatefulWidget {
   const MainSaleScreen({super.key});
@@ -275,6 +278,63 @@ class _MainSaleScreenState extends State<MainSaleScreen> {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(content: Text("Sale Completed! ID: $saleId"), backgroundColor: Colors.green),
       );
+
+      // --- Generate & Print Receipt ---
+      try {
+        final receiptService = ReceiptService();
+        final printerService = PrinterService();
+        
+        // Reconstruct Sale object (since createSale returns ID only)
+        final sale = Sale(
+          id: saleId,
+          branchId: auth.currentBranch!.id,
+          userId: auth.currentUser?.id,
+          invoiceNumber: _invoiceId,
+          totalAmount: _totalAmount,
+          discount: _discountAmount,
+          paymentMethod: method,
+          date: DateTime.now(),
+        );
+
+        // Reconstruct SaleItems
+        final saleItems = _cart.map((item) => SaleItem(
+          id: 0, // Placeholder
+          saleId: saleId,
+          productId: item['id'],
+          quantity: item['qty'],
+          price: item['price'],
+        )).toList();
+
+        // Get Products (we have them in cart but need Product objects)
+        // Ideally we fetch from DB or map from cart. Mapping from cart is faster here.
+        final products = _cart.map((item) => Product(
+          id: item['id'],
+          branchId: auth.currentBranch!.id,
+          name: item['name'],
+          barcode: item['barcode'],
+          quantity: 0, // Not needed for receipt display
+          price: item['price'],
+          status: '',
+        )).toList();
+
+        final pdf = await receiptService.generateReceipt(
+          sale: sale,
+          items: saleItems,
+          products: products,
+          branch: auth.currentBranch!,
+          user: auth.currentUser,
+          customerName: null, // Pass customer name if available
+        );
+
+        await printerService.printReceipt(pdf);
+
+      } catch (e) {
+        print("Printing Error: $e");
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text("Printing failed: $e"), backgroundColor: Colors.orange),
+        );
+      }
+
       _clearCart();
     }
   }
