@@ -2,6 +2,10 @@ import 'package:drift/drift.dart';
 import 'connection/connection.dart';
 
 part 'database_service.g.dart';
+// import 'dart:io'; // Removed for web compatibility
+// import 'package:file_picker/file_picker.dart';
+// import 'package:path_provider/path_provider.dart';
+// import 'package:path/path.dart' as p;
 
 // Companies Table (Super Admin Level)
 class Companies extends Table {
@@ -312,4 +316,9 @@ class AppDatabase extends _$AppDatabase {
   }
 
   Future<int> createUser(UsersCompanion user) => into(users).insert(user);
+
+  // --- Backup & Restore ---
+  Future<void> backupDatabase() => performBackup();
+
+  Future<void> restoreDatabase() => performRestore();
 }

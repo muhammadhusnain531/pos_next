@@ -5,6 +5,7 @@ import '../services/database_service.dart';
 import '../services/auth_service.dart';
 import 'business_screens/day_opening_screen.dart';
 import 'business_screens/day_closing_screen.dart';
+import '../screens/login_screen.dart';
 
 class MainSaleScreen extends StatefulWidget {
   const MainSaleScreen({super.key});
@@ -145,7 +146,13 @@ class _MainSaleScreenState extends State<MainSaleScreen> {
         actions: [
           IconButton(
             icon: const Icon(Icons.logout),
-            onPressed: () => auth.logout(),
+            onPressed: () {
+              auth.logout();
+              Navigator.of(context).pushAndRemoveUntil(
+                MaterialPageRoute(builder: (context) => const LoginScreen()),
+                (route) => false,
+              );
+            },
           )
         ],
       ),
@@ -329,6 +336,19 @@ class _MainSaleScreenState extends State<MainSaleScreen> {
                               _cart.clear();
                               _discount = 0.0;
                             }),
+                          ),
+                          PosButton(
+                            label: "Logout",
+                            color: Colors.red,
+                            icon: Icons.logout,
+                            onPressed: () {
+                              final auth = Provider.of<AuthService>(context, listen: false);
+                              auth.logout();
+                              Navigator.of(context).pushAndRemoveUntil(
+                                MaterialPageRoute(builder: (context) => const LoginScreen()),
+                                (route) => false,
+                              );
+                            },
                           ),
                         ],
                       ),

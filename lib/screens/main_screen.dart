@@ -12,7 +12,8 @@ import 'package:posnext/stockdetailspage.dart';
 import 'package:posnext/addproductscreen.dart';
 import 'package:posnext/customerdetailsscreen.dart';
 import '../screns/business_screens/day_opening_screen.dart';
-import '../screns/business_screens/day_opening_screen.dart';
+import 'login_screen.dart';
+
 import '../screns/business_screens/day_closing_screen.dart';
 import 'package:posnext/services/receipt_service.dart';
 import 'package:posnext/services/printer_service.dart';
@@ -629,10 +630,23 @@ class _MainSaleScreenState extends State<MainSaleScreen> {
                       color: Colors.indigo,
                       onTap: () => Navigator.push(context, MaterialPageRoute(builder: (context) => const CustomerDetailsScreen())),
                     ),
+
                     PosButton(
                       label: "Reports", 
                       color: Colors.black87,
                       onTap: () => Navigator.push(context, MaterialPageRoute(builder: (context) => const SaleReportPage())),
+                    ),
+                    PosButton(
+                      label: "Logout",
+                      color: Colors.red,
+                      onTap: () {
+                        final auth = Provider.of<AuthService>(context, listen: false);
+                        auth.logout();
+                        Navigator.of(context).pushAndRemoveUntil(
+                          MaterialPageRoute(builder: (context) => const LoginScreen()),
+                          (route) => false,
+                        );
+                      },
                     ),
                   ],
                 ),
