@@ -1,3 +1,4 @@
+
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../../services/database_service.dart';
@@ -89,6 +90,25 @@ class _DayClosingScreenState extends State<DayClosingScreen> {
 
       await database.closeBusinessDay(
         _currentDay!.id,
+        countedCash,
+        _discrepancy,
+        auth.currentUser?.username ?? 'Admin',
+      );
+
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text('Business Day Closed Successfully')),
+        );
+        Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(builder: (_) => const PostCloseScreen()),
+        );
+      }
+    } catch (e) {
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('Error closing day: $e')),
+        );
       }
     } finally {
       if (mounted) {
