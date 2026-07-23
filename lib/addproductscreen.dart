@@ -17,6 +17,8 @@ class _AddProductScreenState extends State<AddProductScreen> {
   final _descriptionController = TextEditingController();
   final _quantityController = TextEditingController();
   final _priceController = TextEditingController();
+  final _durationController = TextEditingController(text: '30');
+  bool _isService = false;
 
   @override
   void dispose() {
@@ -25,6 +27,7 @@ class _AddProductScreenState extends State<AddProductScreen> {
     _descriptionController.dispose();
     _quantityController.dispose();
     _priceController.dispose();
+    _durationController.dispose();
     super.dispose();
   }
 
@@ -44,7 +47,8 @@ class _AddProductScreenState extends State<AddProductScreen> {
     if (_nameController.text.isEmpty ||
         _barcodeController.text.isEmpty ||
         _priceController.text.isEmpty ||
-        _quantityController.text.isEmpty) {
+        (!_isService && _quantityController.text.isEmpty) ||
+        (_isService && _durationController.text.isEmpty)) {
       if (!mounted) return;
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(content: Text("Please fill all required fields.")),
@@ -59,21 +63,22 @@ class _AddProductScreenState extends State<AddProductScreen> {
         if (!mounted) return;
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(
-            content: Text("Product with this barcode already exists!"),
+            content: Text("Product/Service with this barcode already exists!"),
             backgroundColor: Colors.red,
           ),
         );
         return;
       }
 
-      // Create new product
+      // Create new product or service
       final newProduct = ProductsCompanion(
         branchId: drift.Value(authService.currentBranch!.id),
         name: drift.Value(_nameController.text),
         barcode: drift.Value(_barcodeController.text),
-       // description: drift.Value(_descriptionController.text.isNotEmpty ? _descriptionController.text : ''),
         price: drift.Value(double.tryParse(_priceController.text) ?? 0.0),
-        quantity: drift.Value(int.tryParse(_quantityController.text) ?? 0),
+        quantity: drift.Value(_isService ? 0 : (int.tryParse(_quantityController.text) ?? 0)),
+        isService: drift.Value(_isService),
+        durationMinutes: drift.Value(_isService ? (int.tryParse(_durationController.text) ?? 30) : null),
       );
 
       await db.addProduct(newProduct);
@@ -81,8 +86,8 @@ class _AddProductScreenState extends State<AddProductScreen> {
       if (!mounted) return;
 
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Text("Product Saved Successfully!"),
+        SnackBar(
+          content: Text(_isService ? "Service Saved Successfully!" : "Product Saved Successfully!"),
           backgroundColor: Colors.green,
         ),
       );
@@ -92,14 +97,15 @@ class _AddProductScreenState extends State<AddProductScreen> {
       _barcodeController.clear();
       _priceController.clear();
       _quantityController.clear();
+      _durationController.text = '30';
       _descriptionController.clear();
     } catch (e, stackTrace) {
-      debugPrint("Error saving product: $e");
+      debugPrint("Error saving item: $e");
       debugPrint(stackTrace.toString());
       if (!mounted) return;
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
-          content: Text("Error saving product: $e"),
+          content: Text("Error saving item: $e"),
           backgroundColor: Colors.red,
           duration: const Duration(seconds: 3),
         ),
@@ -112,7 +118,7 @@ class _AddProductScreenState extends State<AddProductScreen> {
     return Scaffold(
       backgroundColor: const Color(0xFFF5F6FA),
       appBar: AppBar(
-        title: const Text("Add Product"),
+        title: Text(_isService ? "Add Service" : "Add Product"),
         leading: IconButton(
           icon: const Icon(Icons.arrow_back),
           onPressed: () => Navigator.pop(context),
@@ -129,35 +135,64 @@ class _AddProductScreenState extends State<AddProductScreen> {
           child: SingleChildScrollView(
             child: Column(
               children: [
-                const Text(
-                  "Add Product in System",
-                  style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+                Text(
+                  _isService ? "Add Service in System" : "Add Product in System",
+                  style: const TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
                 ),
                 const SizedBox(height: 24),
                 Row(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    // LEFT: Single Product Form
+                    // LEFT: Single Form
                     Expanded(
                       flex: 2,
                       child: Column(
                         children: [
+                          // Type Selection
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              ChoiceChip(
+                                label: const Text("Product (Retail)"),
+                                selected: !_isService,
+                                onSelected: (val) {
+                                  if (val) setState(() => _isService = false);
+                                },
+                              ),
+                              const SizedBox(width: 16),
+                              ChoiceChip(
+                                label: const Text("Service (Appointment)"),
+                                selected: _isService,
+                                onSelected: (val) {
+                                  if (val) setState(() => _isService = true);
+                                },
+                              ),
+                            ],
+                          ),
+                          const SizedBox(height: 20),
                           _buildTextField("Barcode", _barcodeController),
-                          _buildTextField("Product Name", _nameController),
+                          _buildTextField(_isService ? "Service Name" : "Product Name", _nameController),
                           _buildTextField(
-                            "Product Description",
+                            _isService ? "Service Description" : "Product Description",
                             _descriptionController,
                             maxLines: 3,
                           ),
-                          _buildTextField(
-                            "Quantity",
-                            _quantityController,
-                            keyboardType: TextInputType.number,
-                          ),
+                          if (!_isService)
+                            _buildTextField(
+                              "Quantity",
+                              _quantityController,
+                              keyboardType: TextInputType.number,
+                            ),
+                          if (_isService)
+                            _buildTextField(
+                              "Duration (minutes)",
+                              _durationController,
+                              keyboardType: TextInputType.number,
+                            ),
                           _buildTextField(
                             "Price",
                             _priceController,
-                            keyboardType: TextInputType.numberWithOptions(
+                            keyboardType: const TextInputType.numberWithOptions(
                               decimal: true,
                             ),
                           ),
@@ -171,19 +206,19 @@ class _AddProductScreenState extends State<AddProductScreen> {
                                 const EdgeInsets.symmetric(vertical: 14),
                               ),
                               onPressed: _saveProduct,
-                              child: const Text(
-                                "Save Product",
-                                style: TextStyle(
+                              child: Text(
+                                _isService ? "Save Service" : "Save Product",
+                                style: const TextStyle(
                                   color: Colors.white,
                                   fontSize: 16,
                                   fontWeight: FontWeight.w600,
+                                  ),
                                 ),
                               ),
                             ),
-                          ),
-                        ],
+                          ],
+                        ),
                       ),
-                    ),
                     const VerticalDivider(width: 40),
                     // RIGHT: Bulk Upload
                     Expanded(

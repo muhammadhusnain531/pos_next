@@ -41,7 +41,7 @@ class _PayByCardPageState extends State<PayByCardPage> {
       barrierDismissible: false,
       builder: (ctx) => AlertDialog(
         title: const Text("Payment Successful"),
-        content: Text("Paid full amount \$${widget.totalDue.toStringAsFixed(2)} via $_selectedMethod"),
+        content: Text("Paid full amount Rs. ${widget.totalDue.toStringAsFixed(2)} via $_selectedMethod"),
         actions: [
           TextButton(
             onPressed: () {
@@ -76,7 +76,7 @@ class _PayByCardPageState extends State<PayByCardPage> {
           content: TextField(
             keyboardType: const TextInputType.numberWithOptions(decimal: true),
             autofocus: true,
-            decoration: const InputDecoration(prefixText: "\$ ", hintText: "0.00", border: OutlineInputBorder()),
+            decoration: const InputDecoration(prefixText: "Rs. ", hintText: "0.00", border: OutlineInputBorder()),
             onChanged: (val) => amountStr = val,
           ),
           actions: [
@@ -134,7 +134,7 @@ class _PayByCardPageState extends State<PayByCardPage> {
       barrierDismissible: false,
       builder: (ctx) => AlertDialog(
         title: const Text("Payment Successful"),
-        content: Text("Paid \$${amount.toStringAsFixed(2)} via $_selectedMethod"),
+        content: Text("Paid Rs. ${amount.toStringAsFixed(2)} via $_selectedMethod"),
         actions: [
           TextButton(
             onPressed: () {
@@ -182,7 +182,7 @@ class _PayByCardPageState extends State<PayByCardPage> {
                 controller: TextEditingController(text: widget.totalDue.toStringAsFixed(2)),
                 style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 24),
                 decoration: const InputDecoration(
-                  prefixText: '\$ ',
+                  prefixText: 'Rs. ',
                   border: OutlineInputBorder(),
                 ),
               ),

@@ -74,11 +74,11 @@ class PayByGiftCardPage extends StatelessWidget {
                         const SizedBox(height: 18),
                         const Text("Initial Giftcard Balance", style: TextStyle(fontSize: 16)),
                         const SizedBox(height: 2),
-                        const Text("\$50.00", style: TextStyle(fontSize: 16)),
+                        const Text("Rs. 50.00", style: TextStyle(fontSize: 16)),
                         const SizedBox(height: 8),
                         const Text("Bill Amount", style: TextStyle(fontSize: 16)),
                         const SizedBox(height: 2),
-                        const Text("\$35.50", style: TextStyle(fontSize: 16)),
+                        const Text("Rs. 35.50", style: TextStyle(fontSize: 16)),
                         const SizedBox(height: 12),
                         const Divider(),
                         const SizedBox(height: 8),
@@ -88,7 +88,7 @@ class PayByGiftCardPage extends StatelessWidget {
                         ),
                         const SizedBox(height: 2),
                         const Text(
-                          "-\$35.50",
+                          "-Rs. 35.50",
                           style: TextStyle(color: Color(0xFF20B15A), fontWeight: FontWeight.w600, fontSize: 16),
                         ),
                         const SizedBox(height: 14),
@@ -114,7 +114,7 @@ class PayByGiftCardPage extends StatelessWidget {
                               ),
                               SizedBox(height: 4),
                               Text(
-                                "\$14.50",
+                                "Rs. 14.50",
                                 style: TextStyle(
                                   color: Color(0xFF3578F6),
                                   fontWeight: FontWeight.bold,

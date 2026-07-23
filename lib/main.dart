@@ -4,6 +4,7 @@ import 'package:posnext/services/database_service.dart';
 import 'package:posnext/screens/main_screen.dart';
 import 'package:posnext/services/auth_service.dart';
 import 'package:posnext/screens/login_screen.dart';
+import 'package:posnext/theme/app_theme.dart';
 
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
@@ -29,10 +30,7 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       title: 'POS Next',
-      theme: ThemeData(
-        primarySwatch: Colors.blue,
-        scaffoldBackgroundColor: const Color(0xFFF5F6FA),
-      ),
+      theme: AppTheme.theme,
       home: const LoginScreen(),
     );
   }

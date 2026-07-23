@@ -128,7 +128,7 @@ class _DayClosingScreenState extends State<DayClosingScreen> {
               style: TextStyle(
                   fontWeight: isBold ? FontWeight.bold : FontWeight.normal)),
           Text(
-            '\$ ${value.toStringAsFixed(2)}',
+            'Rs. ${value.toStringAsFixed(2)}',
             style: TextStyle(
               fontWeight: isBold ? FontWeight.bold : FontWeight.normal,
               color: valueColor ?? Colors.black,
@@ -231,7 +231,7 @@ class _DayClosingScreenState extends State<DayClosingScreen> {
                     keyboardType: const TextInputType.numberWithOptions(
                         decimal: true),
                     decoration: const InputDecoration(
-                      prefixText: '\$ ',
+                      prefixText: 'Rs. ',
                       border: OutlineInputBorder(),
                       hintText: '0.00',
                     ),
@@ -261,7 +261,7 @@ class _DayClosingScreenState extends State<DayClosingScreen> {
                         const Text('Discrepancy (Over/Short):',
                             style: TextStyle(fontWeight: FontWeight.bold)),
                         Text(
-                          '\$ ${_discrepancy.toStringAsFixed(2)}',
+                          'Rs. ${_discrepancy.toStringAsFixed(2)}',
                           style: TextStyle(
                             fontWeight: FontWeight.bold,
                             color: _discrepancy == 0

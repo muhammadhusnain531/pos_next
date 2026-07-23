@@ -121,7 +121,7 @@ class _StockDetailsPageState extends State<StockDetailsPage> {
                           return DataRow(cells: [
                             DataCell(Text(product.name)),
                             DataCell(Text(product.barcode)),
-                            DataCell(Text("\$${product.price.toStringAsFixed(2)}")),
+                            DataCell(Text("Rs. ${product.price.toStringAsFixed(2)}")),
                             DataCell(Text(product.quantity.toString())),
                             DataCell(
                               Container(

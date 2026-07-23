@@ -115,13 +115,13 @@ class _SaleReportPageState extends State<SaleReportPage> {
                 // Summary Cards
                 Row(
                   children: [
-                    Expanded(child: _buildSummaryCard('Total Sales', '\$${totalSales.toStringAsFixed(2)}', Icons.trending_up, Colors.green)),
+                    Expanded(child: _buildSummaryCard('Total Sales', 'Rs. ${totalSales.toStringAsFixed(2)}', Icons.trending_up, Colors.green)),
                     const SizedBox(width: 16),
                     Expanded(child: _buildSummaryCard('Total Orders', '$totalOrders', Icons.receipt_long, Colors.blue)),
                     const SizedBox(width: 16),
-                    Expanded(child: _buildSummaryCard('Avg Order', '\$${avgOrder.toStringAsFixed(2)}', Icons.assessment, Colors.purple)),
+                    Expanded(child: _buildSummaryCard('Avg Order', 'Rs. ${avgOrder.toStringAsFixed(2)}', Icons.assessment, Colors.purple)),
                     const SizedBox(width: 16),
-                    Expanded(child: _buildSummaryCard('Discount', '\$${totalDiscount.toStringAsFixed(2)}', Icons.local_offer, Colors.orange)),
+                    Expanded(child: _buildSummaryCard('Discount', 'Rs. ${totalDiscount.toStringAsFixed(2)}', Icons.local_offer, Colors.orange)),
                   ],
                 ),
 
@@ -150,7 +150,7 @@ class _SaleReportPageState extends State<SaleReportPage> {
                               DataCell(Text(sale.invoiceNumber)),
                               DataCell(Text(sale.date.toString().split(' ')[0])),
                               DataCell(Text(sale.paymentMethod)),
-                              DataCell(Text("\$${sale.totalAmount.toStringAsFixed(2)}")),
+                              DataCell(Text("Rs. ${sale.totalAmount.toStringAsFixed(2)}")),
                             ]);
                           }).toList(),
                         ),

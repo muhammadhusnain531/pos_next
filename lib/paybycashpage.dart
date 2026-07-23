@@ -42,7 +42,7 @@ class _PayByCashPageState extends State<PayByCashPage> {
         context: context,
         builder: (ctx) => AlertDialog(
           title: const Text("Payment Successful"),
-          content: Text("Change Due: \$${changeDue.toStringAsFixed(2)}"),
+          content: Text("Change Due: Rs. ${changeDue.toStringAsFixed(2)}"),
           actions: [
             TextButton(
               onPressed: () {
@@ -58,7 +58,7 @@ class _PayByCashPageState extends State<PayByCashPage> {
     } else {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
-          content: Text("Insufficient Cash. Need \$${(widget.totalDue - cashReceived).toStringAsFixed(2)} more."),
+          content: Text("Insufficient Cash. Need Rs. ${(widget.totalDue - cashReceived).toStringAsFixed(2)} more."),
           backgroundColor: Colors.red,
         ),
       );
@@ -85,7 +85,7 @@ class _PayByCashPageState extends State<PayByCashPage> {
             children: [
               const Text('Pay by Cash', style: TextStyle(fontSize: 26, fontWeight: FontWeight.bold)),
               const SizedBox(height: 24),
-              Text('Total Due: \$${widget.totalDue.toStringAsFixed(2)}', style: const TextStyle(fontSize: 20, color: Colors.blue)),
+              Text('Total Due: Rs. ${widget.totalDue.toStringAsFixed(2)}', style: const TextStyle(fontSize: 20, color: Colors.blue)),
               const SizedBox(height: 16),
               Container(
                 width: double.infinity,

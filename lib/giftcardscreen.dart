@@ -87,7 +87,7 @@ class _GiftCardScreenState extends State<GiftCardScreen> {
       context: context,
       builder: (ctx) => AlertDialog(
         title: const Text("Success"),
-        content: Text("Gift Card Issued Successfully!\nID: $newReportId\nAmount: \$${_amountController.text}\nPayment: $_paymentMethod"),
+        content: Text("Gift Card Issued Successfully!\nID: $newReportId\nAmount: Rs. ${_amountController.text}\nPayment: $_paymentMethod"),
         actions: [
           TextButton(
             onPressed: () {
@@ -220,7 +220,7 @@ class _GiftCardScreenState extends State<GiftCardScreen> {
                         keyboardType: const TextInputType.numberWithOptions(decimal: true),
                         decoration: InputDecoration(
                           labelText: "Amount",
-                          prefixText: "\$ ",
+                          prefixText: "Rs. ",
                           border: OutlineInputBorder(
                             borderRadius: BorderRadius.circular(6),
                           ),

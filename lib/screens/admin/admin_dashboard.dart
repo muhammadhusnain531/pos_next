@@ -1,7 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:google_fonts/google_fonts.dart';
 import '../../services/auth_service.dart';
 import '../../services/database_service.dart';
+import '../../theme/colors.dart';
+import '../../theme/button_styles.dart';
 import 'manage_branches_screen.dart';
 import 'manage_users_screen.dart';
 import '../login_screen.dart';
@@ -13,10 +16,32 @@ class AdminDashboardScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Super Admin Dashboard'),
+        title: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Text(
+              'CŌNTOR 369',
+              style: GoogleFonts.playfairDisplay(
+                fontSize: 18,
+                fontWeight: FontWeight.w500,
+                letterSpacing: 1.8,
+              ),
+            ),
+            Text(
+              'ADMIN PORTAL',
+              style: GoogleFonts.dmSans(
+                fontSize: 9,
+                fontWeight: FontWeight.w500,
+                letterSpacing: 2.2,
+                color: AppColors.textLight,
+              ),
+            ),
+          ],
+        ),
         actions: [
           IconButton(
-            icon: const Icon(Icons.logout),
+            icon: const Icon(Icons.logout, color: AppColors.mauve),
             onPressed: () {
               Provider.of<AuthService>(context, listen: false).logout();
               Navigator.pushReplacement(
@@ -38,7 +63,7 @@ class AdminDashboardScreen extends StatelessWidget {
               context,
               'Manage Branches',
               Icons.store,
-              Colors.blue,
+              AppColors.mauve,
               () => Navigator.push(
                 context,
                 MaterialPageRoute(builder: (context) => const ManageBranchesScreen()),
@@ -48,32 +73,31 @@ class AdminDashboardScreen extends StatelessWidget {
               context,
               'Manage Users',
               Icons.people,
-              Colors.orange,
+              AppColors.blushDeep,
               () => Navigator.push(
                 context,
                 MaterialPageRoute(builder: (context) => const ManageUsersScreen()),
               ),
             ),
-            // Placeholder for other admin features
             _buildDashboardCard(
               context,
               'Reports',
               Icons.bar_chart,
-              Colors.purple,
+              AppColors.zinc,
               () {},
             ),
             _buildDashboardCard(
               context,
               'Database',
               Icons.storage,
-              Colors.teal,
+              AppColors.mauveDeep,
               () => _showDatabaseOptions(context),
             ),
             _buildDashboardCard(
               context,
               'Settings',
               Icons.settings,
-              Colors.grey,
+              AppColors.textLight,
               () {},
             ),
           ],
@@ -90,19 +114,26 @@ class AdminDashboardScreen extends StatelessWidget {
     VoidCallback onTap,
   ) {
     return Card(
-      elevation: 4,
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+      elevation: 0,
+      shape: RoundedRectangleBorder(
+        side: const BorderSide(color: AppColors.border),
+        borderRadius: BorderRadius.circular(2),
+      ),
       child: InkWell(
         onTap: onTap,
-        borderRadius: BorderRadius.circular(16),
+        borderRadius: BorderRadius.circular(2),
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Icon(icon, size: 64, color: color),
-            const SizedBox(height: 16),
+            Icon(icon, size: 48, color: color),
+            const SizedBox(height: 12),
             Text(
               title,
-              style: const TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+              style: GoogleFonts.playfairDisplay(
+                fontSize: 16,
+                fontWeight: FontWeight.w500,
+                color: AppColors.text,
+              ),
             ),
           ],
         ),

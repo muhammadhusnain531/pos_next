@@ -1,0 +1,244 @@
+﻿bjbj
+CONFIDENTIALITY AGREEMENT
+Contract Information
+Parties
+Your Company Details
+Company you want to discuss with
+(each a "Party", together referred to as the "Parties").
+Discussions:
+The Parties wish to conclude an Agreement concerning E-Commerce Solutions.
+Permitted Parties:
+Name of the other company
+[Other Party]  - None
+Effective Date:
+Specific Terms:
+[any specific terms agreed on by the Parties, if none enter 
+None
+Contact Persons
+Your company: [insert name and position of contact person]
+Other Company: [insert name and position of contact person]
+The Parties signing below enter into this Agreement:
+Your Company
+Signature: ___________________________
+Signature:
+_____________________________
+Name:
+_____________________________
+Name:
+_____________________________
+Title:
+_____________________________
+Title:
+_____________________________
+Date:
+_____________________________
+Date:
+_____________________________
+Other Company
+Signature: ____________________________
+Signature:
+_____________________________
+Name:
+_____________________________
+Name:
+_____________________________
+Title:
+_____________________________
+Title:
+_____________________________
+Date:
+_____________________________
+Date:
+_____________________________
+  The Parties should read and initial each page.   
+Terms and Conditions
+THE PARTIES AGREE AS FOLLOWS:
+Definitions
+In this Agreement:
+"Affiliate" means an entity controlling, controlled by or under common control with a Party; and 
+control
+ means the ability, directly or indirectly, to direct the affairs of another by means of ownership, contract, or otherwise.
+"Agreement" means this Agreement, consisting of the Contract Information and these Terms and Conditions.
+"Confidential Information" means all business and/or technical information: (i) relating to the subject matter of the Discussions; (ii) concerning the Disclosing Party and its products, operations, research and development efforts, inventions, trade secrets, computer software, plans, intentions, market opportunities, processes, methods, policies, recipes, formulae, vendor and customer relationships, finances and other business operations and affairs; and (iii) of third parties that the Disclosing Party maintains in confidence, that has been or may be disclosed to the Receiving Party in written and/or other materials, through the Receiving Party
+s access to premises, equipment or facilities of the Disclosing Party, or by oral communication with employees, consultants, or agents of the Disclosing Party, in connection with, or incidental to, the Discussions and all tangible embodiments of such information. The information disclosed by either Party shall be Confidential Information irrespective of the medium in which that information or data is embedded, and whether the Confidential Information is disclosed orally, visually or otherwise; it shall notably include any correspondence, presentation and reports. Confidential Information shall include any copies or abstracts made of it as well as any products, samples, prototypes or parts that may contain or reveal the Confidential Information. The Confidential Information of the Disclosing Party shall include the Confidential Information of its Affiliates.
+"Contract Information" means the basic information about this Agreement as well as the execution of this Agreement, entitled "Contract Information" commencing on page 1 of this Agreement.
+"Confidentiality Duration" means the period of confidentiality specified in these Terms and Conditions.
+"Disclosing Party" means the Party disclosing its Confidential Information. 
+"Discussions" means the discussions identified as such in the Contract Information.
+"Effective Date" means the date that this Agreement is effective from as specified in the Contract Information.
+"Permitted Parties" means the legal entities to which either Party may disclose Confidential Information, as defined on page 1 of this Agreement.
+"Personnel" means: (i) employees; and (ii) contractors working on a full-time equivalent basis for a Party under its operational control.
+"Receiving Party" means the Party receiving Confidential Information.
+"Representatives" means any duly authorized representatives of a Party.
+"Section" means a section of this Agreement.
+"Terms and Conditions" means these terms and conditions.
+Term and Termination
+This Agreement shall be effective as of the Effective Date and shall terminate after a period of 5
+years from the Effective Date.
+Either Party may terminate the Discussions and this Agreement without prior notice for any reason at any time without any liability or restriction other than those contained in the provisions of Section 3, by giving a written notice to the other Party. Termination of the Discussions implies termination of this Agreement. 
+Confidentiality Duration - Survival
+The obligations of confidentiality and restrictions of use imposed under Section 4 as well as the provisions under Sections 7 and 10 shall survive the expiration or termination of this Agreement and shall remain in force for a period of 5 years after the termination of the Agreement.
+Obligations of Confidentiality and restrictive use
+Each Receiving Party hereby agrees:
+to hold the Confidential Information in strict confidence, to apply to such Confidential Information at least the same standard of care with which it treats its own proprietary and confidential information (being no less than a reasonable standard of care), and to refrain from using any Confidential Information for its own or any third party
+s benefit or in any other manner not authorized in writing by the Disclosing Party; 
+not to disclose to any third party (other than the Permitted Parties) that the Disclosing Party is interested in the subject matter of the Discussions, that either Party has contacted the other and that the Parties have concluded this Confidentiality Agreement;
+to limit the dissemination of any Confidential Information within its organization to those of its Personnel and Representatives who have a need to know such Confidential Information for the purposes of the Discussions and who are subject to confidentiality obligations substantially similar to those contained herein;
+not to analyze, decompose or retro-engineer the products, samples or prototypes containing or revealing the Confidential Information.  
+to accept responsibility for any use or disclosure of Confidential Information by its Personnel and Representatives (and those of its Affiliates and/or Permitted Parties as the case may be) in violation of the terms of this Agreement and to take such steps as may be required by applicable law to enforce this obligation; 
+upon request (at any time) from the Disclosing Party, to destroy or return to the Disclosing Party all written and/or other materials containing Confidential Information provided to it by the Disclosing Party in connection with this Agreement, including all copies thereof, within thirty (30) days of receipt of such request. Destruction shall be confirmed in writing. The provisions of disposal shall not apply to copies of electronically communicated Confidential Information made as a matter of routine information technology back-up, and to Confidential Information or copies of it that must be stored by the Receiving Party or its advisers according to provisions of mandatory law, provided that this Confidential Information or copies of it shall be subject to continuing obligations of confidentiality under this Agreement; but no further use shall be permitted as from the date of the request; and
+to notify the Disclosing Party immediately if the Receiving Party is requested or required to disclose any Confidential Information to a third party in connection with any civil or criminal investigation or any judicial or administrative proceeding, so that the Disclosing Party may if it chooses seek an appropriate protective order.
+The Parties
+ respective obligations of confidentiality contained in this Agreement shall not apply to information that: (i) at the time of disclosure was in the public domain or comes into the public domain other than through breach of this Agreement by the Receiving Party; (ii) was known by the Receiving Party (as established by Receiving Party
+s own records or other competent proof) before disclosure by the Disclosing Party; (iii) is lawfully disclosed to the Receiving Party by a third party acting in good faith and not bound by a confidentiality obligation; or (iv) the disclosure of which is required by law, by any court of competent jurisdiction, or by any official regulatory body. Detail information shall not be considered subject to one of the foregoing exceptions merely because it is embraced by more general information which is subject to one or more of the exceptions. Combinations of items shall not be considered subject to one of the foregoing exceptions merely because the items, but not the combinations themselves, are subject to one or more of the exceptions.
+The Parties are neither entitled to publicize their relationship in any way nor utilize the other Party
+s trademarks unless expressly authorized.
+The obligations of confidentiality contained in this Agreement shall continue in force for the period of time specified in the Confidentiality Duration.
+No further obligation
+This Agreement does not:
+create any other relationship; or
+oblige a Party to disclose any information;
+oblige a Party to enter into any other agreement; or
+require consideration for any information received.
+Nothing in this Agreement shall affect any rights the Disclosing Party may have in relation to the Confidential Information, neither shall this Agreement provide the Receiving Party with any right or license under any patents, copyrights, trade secrets, or the like in relation to the Confidential Information. Each Party reserves all rights related to its Confidential Information, including all intellectual property rights attached thereto or derived from such Confidential Information.
+No Warranty
+Although the Parties believe the Confidential Information that may be disclosed hereunder to be accurate, it is understood that each Receiving Party shall be solely responsible for any reliance it places on Confidential Information received from the other Party hereunder. No Confidential Information received hereunder may be used by a Receiving Party against the other Party in any legal action.
+Breach and Remedies
+In addition to the right of any Party to claim damages for breach of contract and any other remedies under the applicable law, the Parties recognize that any breach or violation of any provision of this Agreement may cause irreparable harm to the other Party, which money damages may not necessarily remedy. Therefore, upon any actual or impending violation of any provision of this Agreement, either Party may obtain from any court of competent jurisdiction a preliminary, temporary or permanent injunction, restraining or enjoining such violation by the other Party of any entity or person acting in concert with that Party.
+Entire Agreement and Amendments
+This Agreement represents the entire agreement between the Parties and supersedes all prior agreements, arrangements and understandings, oral or written, between the Parties on the subject matter of the Discussions.
+This Agreement shall not be modified or amended except by an agreement in writing signed by the Parties.
+No Assignment
+This Agreement may not be assigned by either Party without the prior written consent of the other Party, which shall not unreasonably be withheld. No assignment shall relieve a Party of its obligations under this Agreement with respect to Confidential Information disclosed to that Party prior to the agreed assignment. 
+Governing Law and Jurisdiction
+This Agreement shall be governed by the laws of Pakistan without regard to its conflict of laws provisions. The Parties hereby consent to the exclusive jurisdiction of the competent courts of Karachi, Pakistan for the adjudication of any disputes arising under this Agreement.
+Written Form
+This Agreement may not be modified or amended except in writing, signed by authorized representatives of the Parties.
+IN WITNESS WHEREOF, the Parties have executed this Agreement in the Contract Information.
+ PAGE 
+ of 
+ NUMPAGES 
+initials: 
+kXEX6
+h_Vh
+gd9P
+gde 
+gde 
+gde 
+gde 
+gde 
+gde 
+gde 
+gde 
+gde 
+gde 
+gde 
+gde 
+gde 
+gde 
+gde 
+gde 
+gde 
+gde 
+gde 
+gde 
+gde 
+gde 
+gde 
+gde 
+gde 
+gde 
+gd!vp
+gd!vp
+gd+J
+gd'5[
+gde 
+h!vp
+hRQ{
+h!vp
+h!vp
+h0" 
+gd[~M
+gd'5[
+}uquququqgVIV8
+h[~M
+hRQ{
+h[~M
+hRQ{
+hRQ{
+h0" 
+h!vp
+hRQ{
+hRQ{
+hRQ{
+hRQ{
+h[~M
+hRQ{
+h[~M
+hRQ{
+h[~M
+hRQ{
+&!:V
+&!:V
+[Content_Types].xml
+_rels/.rels
+theme/theme/themeManager.xml
+sQ}#
+theme/theme/theme1.xml
+$O})
+Xp90
++PHI|
+9xu5
+fs+W
+VF7H
+q=. 
+8}d-
+qyI@
+j!Q_
+jyV`
+|PZ+
+O&x$
+A8>v
+;EUC
+*~P(5
+/,EE\}
+theme/theme/_rels/themeManager.xml.rels
+6?$Q
+K(M&$R(.1
+[Content_Types].xmlPK
+_rels/.relsPK
+theme/theme/themeManager.xmlPK
+theme/theme/theme1.xmlPK
+theme/theme/_rels/themeManager.xml.relsPK
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<a:clrMap xmlns:a="http://schemas.openxmlformats.org/drawingml/2006/main" bg1="lt1" tx1="dk1" bg2="lt2" tx2="dk2" accent1="accent1" accent2="accent2" accent3="accent3" accent4="accent4" accent5="accent5" accent6="accent6" hlink="hlink" folHlink="folHlink"/>
+.<B.
+BaB$
+nrU>
+Confidentiality Agreement
+kmetrailler
+Normal
+Hashim Hasan
+Microsoft Office Word
+Confidentiality Agreement
+Title
+MSIP_Label_2daaf5d3-ddc7-4bb3-aa60-2658066f8060_Enabled
+MSIP_Label_2daaf5d3-ddc7-4bb3-aa60-2658066f8060_SiteId
+MSIP_Label_2daaf5d3-ddc7-4bb3-aa60-2658066f8060_Owner
+MSIP_Label_2daaf5d3-ddc7-4bb3-aa60-2658066f8060_SetDate
+MSIP_Label_2daaf5d3-ddc7-4bb3-aa60-2658066f8060_Name
+MSIP_Label_2daaf5d3-ddc7-4bb3-aa60-2658066f8060_Application
+MSIP_Label_2daaf5d3-ddc7-4bb3-aa60-2658066f8060_Extended_MSFT_Method
+Sensitivity
+True
+f1039173-aed6-49bc-98b0-0b210c8ea140
+ZulfiqarMuhammad.Khan@sicpa.com
+2021-06-21T10:17:22.9600030Z
+Internal
+Microsoft Azure Information Protection
+Automatic
+Internal
+Microsoft Word 97-2003 Document
+MSWordDoc
+Word.Document.8
+

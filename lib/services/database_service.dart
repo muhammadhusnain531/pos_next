@@ -48,6 +48,8 @@ class Products extends Table {
   RealColumn get price => real()();
   TextColumn get sku => text().nullable()();
   TextColumn get status => text().withDefault(const Constant('In Stock'))();
+  BoolColumn get isService => boolean().withDefault(const Constant(false))();
+  IntColumn get durationMinutes => integer().nullable()();
 }
 
 // Sales Table
@@ -89,12 +91,46 @@ class BusinessDays extends Table {
   RealColumn get discrepancy => real().nullable()();
 }
 
-@DriftDatabase(tables: [Products, Sales, SaleItems, BusinessDays, Companies, Branches, Users])
+// Customers Table
+class Customers extends Table {
+  IntColumn get id => integer().autoIncrement()();
+  TextColumn get name => text().withLength(min: 1, max: 255)();
+  TextColumn get phone => text().withLength(min: 1, max: 50)();
+  TextColumn get email => text().nullable()();
+  DateTimeColumn get createdAt => dateTime().withDefault(currentDateAndTime)();
+}
+
+// Staff Table (Stylists / Beauticians)
+class Staff extends Table {
+  IntColumn get id => integer().autoIncrement()();
+  IntColumn get branchId => integer().references(Branches, #id)();
+  TextColumn get name => text().withLength(min: 1, max: 255)();
+  TextColumn get phone => text().nullable()();
+  TextColumn get specialty => text().nullable()();
+  BoolColumn get isActive => boolean().withDefault(const Constant(true))();
+  DateTimeColumn get createdAt => dateTime().withDefault(currentDateAndTime)();
+}
+
+// Appointments Table (Advance Bookings)
+class Appointments extends Table {
+  IntColumn get id => integer().autoIncrement()();
+  IntColumn get branchId => integer().references(Branches, #id)();
+  IntColumn get customerId => integer().references(Customers, #id)();
+  IntColumn get serviceId => integer().references(Products, #id)();
+  IntColumn get staffId => integer().nullable().references(Staff, #id)();
+  DateTimeColumn get appointmentTime => dateTime()();
+  IntColumn get durationMinutes => integer().withDefault(const Constant(30))();
+  TextColumn get status => text().withDefault(const Constant('Pending'))();
+  TextColumn get notes => text().nullable()();
+  DateTimeColumn get createdAt => dateTime().withDefault(currentDateAndTime)();
+}
+
+@DriftDatabase(tables: [Products, Sales, SaleItems, BusinessDays, Companies, Branches, Users, Customers, Staff, Appointments])
 class AppDatabase extends _$AppDatabase {
   AppDatabase() : super(openConnection());
 
   @override
-  int get schemaVersion => 4; // Incremented to 4
+  int get schemaVersion => 5; // Incremented to 5
 
   @override
   MigrationStrategy get migration {
@@ -121,6 +157,16 @@ class AppDatabase extends _$AppDatabase {
           await m.addColumn(sales, sales.branchId);
           await m.addColumn(sales, sales.userId);
           await m.addColumn(businessDays, businessDays.branchId);
+        }
+        if (from < 5) {
+          // Create new salon tables
+          await m.createTable(customers);
+          await m.createTable(staff);
+          await m.createTable(appointments);
+
+          // Add new columns to products
+          await m.addColumn(products, products.isService);
+          await m.addColumn(products, products.durationMinutes);
         }
       },
     );
@@ -152,6 +198,10 @@ class AppDatabase extends _$AppDatabase {
       for (final item in items) {
         // 1. Get current product
         final product = await (select(products)..where((t) => t.id.equals(item.productId.value))).getSingle();
+        
+        if (product.isService) {
+          continue; // Services do not use stock inventory
+        }
         
         // Check stock availability
         if (product.quantity < item.quantity.value) {
@@ -316,6 +366,240 @@ class AppDatabase extends _$AppDatabase {
   }
 
   Future<int> createUser(UsersCompanion user) => into(users).insert(user);
+
+  // --- Customer Queries ---
+  Future<List<Customer>> getAllCustomers() => select(customers).get();
+  Future<int> createCustomer(CustomersCompanion entry) => into(customers).insert(entry);
+  Future<bool> updateCustomer(Customer entry) => update(customers).replace(entry);
+  Future<int> deleteCustomer(int id) => (delete(customers)..where((t) => t.id.equals(id))).go();
+
+  // --- Staff Queries ---
+  Future<List<StaffData>> getAllStaff(int branchId) {
+    return (select(staff)..where((tbl) => tbl.branchId.equals(branchId))).get();
+  }
+  Future<int> createStaff(StaffCompanion entry) => into(staff).insert(entry);
+  Future<bool> updateStaff(StaffData entry) => update(staff).replace(entry);
+  Future<int> deleteStaff(int id) => (delete(staff)..where((t) => t.id.equals(id))).go();
+
+  // --- Appointment Queries ---
+  Future<List<Appointment>> getAllAppointments(int branchId) {
+    return (select(appointments)..where((tbl) => tbl.branchId.equals(branchId))).get();
+  }
+  Future<List<Appointment>> getAppointmentsForDate(int branchId, DateTime date) {
+    final start = DateTime(date.year, date.month, date.day);
+    final end = DateTime(date.year, date.month, date.day, 23, 59, 59);
+    return (select(appointments)
+      ..where((tbl) => tbl.branchId.equals(branchId) & tbl.appointmentTime.isBetweenValues(start, end))
+      ..orderBy([(tbl) => OrderingTerm.asc(tbl.appointmentTime)])
+    ).get();
+  }
+  Future<int> createAppointment(AppointmentsCompanion entry) => into(appointments).insert(entry);
+  Future<bool> updateAppointment(Appointment entry) => update(appointments).replace(entry);
+  Future<int> deleteAppointment(int id) => (delete(appointments)..where((t) => t.id.equals(id))).go();
+
+  Future<void> seedDemoData() async {
+    return transaction(() async {
+      // 1. Ensure a Branch exists (or create one)
+      final branchesList = await select(branches).get();
+      int branchId;
+      if (branchesList.isEmpty) {
+        // Create Company
+        final companyId = await into(companies).insert(CompaniesCompanion(
+          name: const Value('Vibrant Nails & Hair Salon'),
+          address: const Value('102 Beauty Avenue, New York'),
+        ));
+        branchId = await into(branches).insert(BranchesCompanion(
+          companyId: Value(companyId),
+          name: const Value('Main Salon Branch'),
+          address: const Value('102 Beauty Avenue, New York'),
+        ));
+      } else {
+        branchId = branchesList.first.id;
+      }
+
+      // 2. Ensure SuperAdmin exists
+      final usersList = await select(users).get();
+      if (usersList.isEmpty) {
+        await into(users).insert(UsersCompanion(
+          branchId: Value(branchId),
+          username: const Value('admin'),
+          password: const Value('admin'),
+          role: const Value('SuperAdmin'),
+          isActive: const Value(true),
+          name: const Value('Salon Admin'),
+        ));
+      }
+
+      // 3. Insert Demo Customers
+      final customerIds = <int>[];
+      final currentCustomers = await select(customers).get();
+      if (currentCustomers.isEmpty) {
+        customerIds.add(await into(customers).insert(const CustomersCompanion(
+          name: Value('Emily Watson'),
+          phone: Value('+92 300 9876543'),
+          email: Value('emily@example.com'),
+        )));
+        customerIds.add(await into(customers).insert(const CustomersCompanion(
+          name: Value('Michael Green'),
+          phone: Value('+92 321 5551234'),
+          email: Value('michael@example.com'),
+        )));
+        customerIds.add(await into(customers).insert(const CustomersCompanion(
+          name: Value('Sophia Taylor'),
+          phone: Value('+92 312 7776655'),
+          email: Value('sophia@example.com'),
+        )));
+      } else {
+        customerIds.addAll(currentCustomers.map((c) => c.id));
+      }
+
+      // 4. Insert Demo Staff / Stylists
+      final staffIds = <int>[];
+      final currentStaff = await select(staff).get();
+      if (currentStaff.isEmpty) {
+        staffIds.add(await into(staff).insert(StaffCompanion(
+          branchId: Value(branchId),
+          name: const Value('Jessica Alva'),
+          specialty: const Value('Hair Coloring'),
+          isActive: const Value(true),
+        )));
+        staffIds.add(await into(staff).insert(StaffCompanion(
+          branchId: Value(branchId),
+          name: const Value('David Beckham'),
+          specialty: const Value('Classic Cuts'),
+          isActive: const Value(true),
+        )));
+        staffIds.add(await into(staff).insert(StaffCompanion(
+          branchId: Value(branchId),
+          name: const Value('Sarah Jessica'),
+          specialty: const Value('Nails & Manicure'),
+          isActive: const Value(true),
+        )));
+      } else {
+        staffIds.addAll(currentStaff.map((s) => s.id));
+      }
+
+      // 5. Insert Demo Products and Services
+      final serviceIds = <int>[];
+      final currentProducts = await select(products).get();
+      if (currentProducts.isEmpty) {
+        // Retail Products
+        await into(products).insert(ProductsCompanion(
+          branchId: Value(branchId),
+          name: const Value('Nourishing Salon Shampoo'),
+          barcode: const Value('1001'),
+          category: const Value('Hair Care'),
+          quantity: const Value(50),
+          price: const Value(15.00),
+          isService: const Value(false),
+        ));
+        await into(products).insert(ProductsCompanion(
+          branchId: Value(branchId),
+          name: const Value('Hydrating Conditioner'),
+          barcode: const Value('1002'),
+          category: const Value('Hair Care'),
+          quantity: const Value(40),
+          price: const Value(18.00),
+          isService: const Value(false),
+        ));
+        await into(products).insert(ProductsCompanion(
+          branchId: Value(branchId),
+          name: const Value('Matte Clay Hair Wax'),
+          barcode: const Value('1003'),
+          category: const Value('Styling'),
+          quantity: const Value(30),
+          price: const Value(12.00),
+          isService: const Value(false),
+        ));
+
+        // Services
+        serviceIds.add(await into(products).insert(ProductsCompanion(
+          branchId: Value(branchId),
+          name: const Value('Classic Scissors Haircut'),
+          barcode: const Value('2001'),
+          category: const Value('Services'),
+          quantity: const Value(0),
+          price: const Value(25.00),
+          isService: const Value(true),
+          durationMinutes: const Value(30),
+        )));
+        serviceIds.add(await into(products).insert(ProductsCompanion(
+          branchId: Value(branchId),
+          name: const Value('Full Hair Coloring & Styling'),
+          barcode: const Value('2002'),
+          category: const Value('Services'),
+          quantity: const Value(0),
+          price: const Value(75.00),
+          isService: const Value(true),
+          durationMinutes: const Value(90),
+        )));
+        serviceIds.add(await into(products).insert(ProductsCompanion(
+          branchId: Value(branchId),
+          name: const Value('Deluxe Manicure & Pedicure'),
+          barcode: const Value('2003'),
+          category: const Value('Services'),
+          quantity: const Value(0),
+          price: const Value(40.00),
+          isService: const Value(true),
+          durationMinutes: const Value(60),
+        )));
+        serviceIds.add(await into(products).insert(ProductsCompanion(
+          branchId: Value(branchId),
+          name: const Value('Organic Hydrating Facial'),
+          barcode: const Value('2004'),
+          category: const Value('Services'),
+          quantity: const Value(0),
+          price: const Value(50.00),
+          isService: const Value(true),
+          durationMinutes: const Value(45),
+        )));
+      } else {
+        serviceIds.addAll(currentProducts.where((p) => p.isService).map((p) => p.id));
+      }
+
+      // 6. Insert Demo Appointments (for today)
+      final currentAppts = await select(appointments).get();
+      if (currentAppts.isEmpty && customerIds.isNotEmpty && staffIds.isNotEmpty && serviceIds.isNotEmpty) {
+        final now = DateTime.now();
+
+        // 1st Appointment: Completed (ready for checkout)
+        await into(appointments).insert(AppointmentsCompanion(
+          branchId: Value(branchId),
+          customerId: Value(customerIds[0]), // Emily
+          serviceId: Value(serviceIds[1]), // Hair Coloring
+          staffId: Value(staffIds[0]), // Jessica
+          appointmentTime: Value(DateTime(now.year, now.month, now.day, 10, 0)),
+          durationMinutes: const Value(90),
+          status: const Value('Completed'),
+          notes: const Value('Wants honey blonde highlights'),
+        ));
+
+        // 2nd Appointment: Confirmed
+        await into(appointments).insert(AppointmentsCompanion(
+          branchId: Value(branchId),
+          customerId: Value(customerIds[1]), // Michael
+          serviceId: Value(serviceIds[0]), // Classic Haircut
+          staffId: Value(staffIds[1]), // David
+          appointmentTime: Value(DateTime(now.year, now.month, now.day, 13, 30)),
+          durationMinutes: const Value(30),
+          status: const Value('Confirmed'),
+          notes: const Value('Regular trim'),
+        ));
+
+        // 3rd Appointment: Pending
+        await into(appointments).insert(AppointmentsCompanion(
+          branchId: Value(branchId),
+          customerId: Value(customerIds[2]), // Sophia
+          serviceId: Value(serviceIds[2]), // Manicure/Pedicure
+          staffId: Value(staffIds[2]), // Sarah
+          appointmentTime: Value(DateTime(now.year, now.month, now.day, 15, 0)),
+          durationMinutes: const Value(60),
+          status: const Value('Pending'),
+          notes: const Value('Prefers red nail polish'),
+        ));
+      }
+    });
+  }
 
   // --- Backup & Restore ---
   Future<void> backupDatabase() => performBackup();

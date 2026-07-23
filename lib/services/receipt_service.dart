@@ -88,7 +88,8 @@ class ReceiptService {
                     barcode: '', 
                     quantity: 0, 
                     price: 0,
-                    status: ''
+                    status: '',
+                    isService: false,
                   ),
                 );
                 
@@ -152,6 +153,8 @@ class ReceiptService {
               
               pw.SizedBox(height: 15),
               pw.Center(child: pw.Text('Thank you for visit', style: pw.TextStyle(font: font, fontSize: 10))),
+              pw.Center(child: pw.Text('Software made by Hus & Abu (smc-pvt.ltd)', style: pw.TextStyle(font: font, fontSize: 10))),
+              pw.Center(child: pw.Text('03157637405', style: pw.TextStyle(font: font, fontSize: 10))),
             ],
           );
         },

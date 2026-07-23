@@ -1,0 +1,32 @@
+﻿Normal
+Default Paragraph Font
+Table Normal
+No List
+Table Grid
+Header
+Footer
+Page Number
+List
+List 2
+List 3
+List 4
+List 5
+Balloon Text
+OLE_LINK1
+OLE_LINK2
+OLE_LINK12
+OLE_LINK13
+ClientMatter
+CurrentFooter
+CustomFooter
+Footer
+N:\par\charles\16.05.05
+True
+Root Entry
+Data
+1Table
+WordDocument
+SummaryInformation
+DocumentSummaryInformation
+CompObj
+

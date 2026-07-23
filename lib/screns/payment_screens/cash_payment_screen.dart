@@ -17,7 +17,7 @@ class _CashPaymentScreenState extends State<CashPaymentScreen> {
     // TODO: Call receipt_service.printReceipt()
 
     ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(content: Text("Cash payment of \$${amount.toStringAsFixed(2)} processed")),
+      SnackBar(content: Text("Cash payment of Rs. ${amount.toStringAsFixed(2)} processed")),
     );
 
     Navigator.pop(context);

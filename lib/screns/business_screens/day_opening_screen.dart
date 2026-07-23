@@ -99,7 +99,7 @@ class _DayOpeningScreenState extends State<DayOpeningScreen> {
                     controller: _floatController,
                     keyboardType: const TextInputType.numberWithOptions(decimal: true),
                     decoration: const InputDecoration(
-                      prefixText: '\$ ',
+                      prefixText: 'Rs. ',
                       border: OutlineInputBorder(),
                       hintText: '0.00',
                     ),

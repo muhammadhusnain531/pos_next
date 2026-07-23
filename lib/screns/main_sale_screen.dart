@@ -1,8 +1,10 @@
-import 'package:flutter/material.dart';
+/*import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:drift/drift.dart' as drift;
+import 'package:google_fonts/google_fonts.dart';
 import '../services/database_service.dart';
 import '../services/auth_service.dart';
+import '../theme/colors.dart';
 import 'business_screens/day_opening_screen.dart';
 import 'business_screens/day_closing_screen.dart';
 import '../screens/login_screen.dart';
@@ -38,13 +40,13 @@ class _MainSaleScreenState extends State<MainSaleScreen> {
     if (products.isEmpty) {
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text('Product not found!'), backgroundColor: Colors.red),
+          const SnackBar(content: Text('Product not found!'), backgroundColor: AppColors.bad),
         );
       }
       return;
     }
 
-    // If multiple found, maybe show dialog (simplified: take first)
+    // If multiple found, simplify: take first
     final product = products.first;
     _addToCart(product);
     _barcodeController.clear();
@@ -117,7 +119,7 @@ class _MainSaleScreenState extends State<MainSaleScreen> {
 
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('Payment Successful ($method)!'), backgroundColor: Colors.green),
+          SnackBar(content: Text('Payment Successful ($method)!'), backgroundColor: AppColors.ok),
         );
         setState(() {
           _cart.clear();
@@ -127,7 +129,7 @@ class _MainSaleScreenState extends State<MainSaleScreen> {
     } catch (e) {
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('Error: $e'), backgroundColor: Colors.red),
+          SnackBar(content: Text('Error: $e'), backgroundColor: AppColors.bad),
         );
       }
     } finally {
@@ -140,12 +142,34 @@ class _MainSaleScreenState extends State<MainSaleScreen> {
     final auth = Provider.of<AuthService>(context);
     
     return Scaffold(
-      backgroundColor: const Color(0xFFF5F6FA),
+      backgroundColor: AppColors.beigeLight,
       appBar: AppBar(
-        title: Text("POS - ${auth.currentBranch?.name ?? 'Unknown Branch'}"),
+        title: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Text(
+              'CŌNTOR 369',
+              style: GoogleFonts.playfairDisplay(
+                fontSize: 18,
+                fontWeight: FontWeight.w500,
+                letterSpacing: 1.8,
+              ),
+            ),
+            Text(
+              "POS - ${auth.currentBranch?.name ?? 'Unknown Branch'}",
+              style: GoogleFonts.dmSans(
+                fontSize: 9,
+                fontWeight: FontWeight.w500,
+                letterSpacing: 2.2,
+                color: AppColors.textLight,
+              ),
+            ),
+          ],
+        ),
         actions: [
           IconButton(
-            icon: const Icon(Icons.logout),
+            icon: const Icon(Icons.logout, color: AppColors.mauve),
             onPressed: () {
               auth.logout();
               Navigator.of(context).pushAndRemoveUntil(
@@ -166,8 +190,9 @@ class _MainSaleScreenState extends State<MainSaleScreen> {
               child: Container(
                 padding: const EdgeInsets.all(16),
                 decoration: BoxDecoration(
-                  color: Colors.white,
-                  borderRadius: BorderRadius.circular(8),
+                  color: AppColors.white,
+                  border: Border.all(color: AppColors.border),
+                  borderRadius: BorderRadius.circular(2),
                 ),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
@@ -177,10 +202,23 @@ class _MainSaleScreenState extends State<MainSaleScreen> {
                       controller: _barcodeController,
                       decoration: InputDecoration(
                         hintText: "Scan Barcode or Search Product...",
-                        prefixIcon: const Icon(Icons.search),
-                        border: OutlineInputBorder(borderRadius: BorderRadius.circular(8)),
+                        prefixIcon: const Icon(Icons.search, color: AppColors.textLight),
+                        filled: true,
+                        fillColor: AppColors.beigeLight,
+                        border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(2),
+                          borderSide: const BorderSide(color: AppColors.border),
+                        ),
+                        enabledBorder: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(2),
+                          borderSide: const BorderSide(color: AppColors.border),
+                        ),
+                        focusedBorder: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(2),
+                          borderSide: const BorderSide(color: AppColors.mauve, width: 1.5),
+                        ),
                         suffixIcon: IconButton(
-                          icon: const Icon(Icons.clear),
+                          icon: const Icon(Icons.clear, color: AppColors.textLight),
                           onPressed: () => _barcodeController.clear(),
                         ),
                       ),
@@ -191,15 +229,59 @@ class _MainSaleScreenState extends State<MainSaleScreen> {
 
                     // Cart Header
                     Container(
-                      color: Colors.grey[100],
+                      color: AppColors.beigeLight,
                       padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 8),
-                      child: const Row(
+                      child: Row(
                         children: [
-                          Expanded(flex: 3, child: Text("Product", style: TextStyle(fontWeight: FontWeight.bold))),
-                          Expanded(flex: 1, child: Text("Price", style: TextStyle(fontWeight: FontWeight.bold))),
-                          Expanded(flex: 2, child: Text("Qty", style: TextStyle(fontWeight: FontWeight.bold))),
-                          Expanded(flex: 1, child: Text("Total", style: TextStyle(fontWeight: FontWeight.bold))),
-                          SizedBox(width: 30), // For delete icon
+                          Expanded(
+                            flex: 3,
+                            child: Text(
+                              "PRODUCT",
+                              style: GoogleFonts.dmSans(
+                                fontSize: 10,
+                                fontWeight: FontWeight.w600,
+                                color: AppColors.textMid,
+                                letterSpacing: 1.0,
+                              ),
+                            ),
+                          ),
+                          Expanded(
+                            flex: 1,
+                            child: Text(
+                              "PRICE",
+                              style: GoogleFonts.dmSans(
+                                fontSize: 10,
+                                fontWeight: FontWeight.w600,
+                                color: AppColors.textMid,
+                                letterSpacing: 1.0,
+                              ),
+                            ),
+                          ),
+                          Expanded(
+                            flex: 2,
+                            child: Text(
+                              "QTY",
+                              style: GoogleFonts.dmSans(
+                                fontSize: 10,
+                                fontWeight: FontWeight.w600,
+                                color: AppColors.textMid,
+                                letterSpacing: 1.0,
+                              ),
+                            ),
+                          ),
+                          Expanded(
+                            flex: 1,
+                            child: Text(
+                              "TOTAL",
+                              style: GoogleFonts.dmSans(
+                                fontSize: 10,
+                                fontWeight: FontWeight.w600,
+                                color: AppColors.textMid,
+                                letterSpacing: 1.0,
+                              ),
+                            ),
+                          ),
+                          const SizedBox(width: 30), // For delete icon
                         ],
                       ),
                     ),
@@ -207,7 +289,15 @@ class _MainSaleScreenState extends State<MainSaleScreen> {
                     // Cart List
                     Expanded(
                       child: _cart.isEmpty
-                          ? const Center(child: Text("Cart is empty", style: TextStyle(color: Colors.grey)))
+                          ? Center(
+                              child: Text(
+                                "Cart is empty",
+                                style: GoogleFonts.dmSans(
+                                  color: AppColors.textLight,
+                                  fontSize: 14,
+                                ),
+                              ),
+                            )
                           : ListView.builder(
                               itemCount: _cart.length,
                               itemBuilder: (context, index) {
@@ -215,28 +305,49 @@ class _MainSaleScreenState extends State<MainSaleScreen> {
                                 return Container(
                                   padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 8),
                                   decoration: const BoxDecoration(
-                                    border: Border(bottom: BorderSide(color: Colors.black12)),
+                                    border: Border(bottom: BorderSide(color: AppColors.border)),
                                   ),
                                   child: Row(
                                     children: [
-                                      Expanded(flex: 3, child: Text(item.product.name)),
-                                      Expanded(flex: 1, child: Text(item.product.price.toStringAsFixed(2))),
+                                      Expanded(
+                                        flex: 3,
+                                        child: Text(
+                                          item.product.name,
+                                          style: GoogleFonts.dmSans(
+                                            color: AppColors.text,
+                                            fontWeight: FontWeight.w500,
+                                          ),
+                                        ),
+                                      ),
+                                      Expanded(
+                                        flex: 1,
+                                        child: Text(
+                                          item.product.price.toStringAsFixed(2),
+                                          style: GoogleFonts.dmSans(color: AppColors.textMid),
+                                        ),
+                                      ),
                                       Expanded(
                                         flex: 2,
                                         child: Row(
                                           children: [
                                             IconButton(
-                                              icon: const Icon(Icons.remove_circle_outline, size: 20),
+                                              icon: const Icon(Icons.remove_circle_outline, color: AppColors.zinc, size: 20),
                                               onPressed: () => _updateQuantity(index, -1),
                                               padding: EdgeInsets.zero,
                                               constraints: const BoxConstraints(),
                                             ),
                                             Padding(
                                               padding: const EdgeInsets.symmetric(horizontal: 8),
-                                              child: Text("${item.quantity}"),
+                                              child: Text(
+                                                "${item.quantity}",
+                                                style: GoogleFonts.dmSans(
+                                                  fontWeight: FontWeight.w600,
+                                                  color: AppColors.text,
+                                                ),
+                                              ),
                                             ),
                                             IconButton(
-                                              icon: const Icon(Icons.add_circle_outline, size: 20),
+                                              icon: const Icon(Icons.add_circle_outline, color: AppColors.zinc, size: 20),
                                               onPressed: () => _updateQuantity(index, 1),
                                               padding: EdgeInsets.zero,
                                               constraints: const BoxConstraints(),
@@ -248,11 +359,14 @@ class _MainSaleScreenState extends State<MainSaleScreen> {
                                         flex: 1,
                                         child: Text(
                                           (item.product.price * item.quantity).toStringAsFixed(2),
-                                          style: const TextStyle(fontWeight: FontWeight.bold),
+                                          style: GoogleFonts.dmSans(
+                                            fontWeight: FontWeight.bold,
+                                            color: AppColors.text,
+                                          ),
                                         ),
                                       ),
                                       IconButton(
-                                        icon: const Icon(Icons.delete, color: Colors.red, size: 20),
+                                        icon: const Icon(Icons.delete, color: AppColors.bad, size: 20),
                                         onPressed: () => _removeFromCart(index),
                                       ),
                                     ],
@@ -268,9 +382,15 @@ class _MainSaleScreenState extends State<MainSaleScreen> {
                     Column(
                       children: [
                         SummaryRow(label: "Subtotal:", value: _subtotal.toStringAsFixed(2)),
-                        SummaryRow(label: "Discount:", value: "- ${_discount.toStringAsFixed(2)}", valueColor: Colors.red),
+                        SummaryRow(label: "Discount:", value: "- ${_discount.toStringAsFixed(2)}", valueColor: AppColors.bad),
                         const Divider(),
-                        SummaryRow(label: "Total:", value: _total.toStringAsFixed(2), isBold: true, fontSize: 20),
+                        SummaryRow(
+                          label: "Total:",
+                          value: _total.toStringAsFixed(2),
+                          isBold: true,
+                          fontSize: 20,
+                          valueColor: AppColors.mauveDeep,
+                        ),
                       ],
                     ),
                   ],
@@ -286,8 +406,9 @@ class _MainSaleScreenState extends State<MainSaleScreen> {
               child: Container(
                 padding: const EdgeInsets.all(16),
                 decoration: BoxDecoration(
-                  color: Colors.white,
-                  borderRadius: BorderRadius.circular(8),
+                  color: AppColors.white,
+                  border: Border.all(color: AppColors.border),
+                  borderRadius: BorderRadius.circular(2),
                 ),
                 child: Column(
                   children: [
@@ -300,19 +421,19 @@ class _MainSaleScreenState extends State<MainSaleScreen> {
                         children: [
                           PosButton(
                             label: "Pay Cash",
-                            color: Colors.green,
+                            color: AppColors.ok,
                             icon: Icons.money,
                             onPressed: () => _processPayment('Cash'),
                           ),
                           PosButton(
                             label: "Pay Card",
-                            color: Colors.blue,
+                            color: AppColors.mauve,
                             icon: Icons.credit_card,
                             onPressed: () => _processPayment('Card'),
                           ),
                           PosButton(
                             label: "Day Open/Close",
-                            color: Colors.orange,
+                            color: AppColors.zinc,
                             icon: Icons.store,
                             onPressed: () async {
                               final db = Provider.of<AppDatabase>(context, listen: false);
@@ -330,7 +451,7 @@ class _MainSaleScreenState extends State<MainSaleScreen> {
                           ),
                           PosButton(
                             label: "Clear Cart",
-                            color: Colors.red,
+                            color: AppColors.bad,
                             icon: Icons.delete_sweep,
                             onPressed: () => setState(() {
                               _cart.clear();
@@ -339,7 +460,7 @@ class _MainSaleScreenState extends State<MainSaleScreen> {
                           ),
                           PosButton(
                             label: "Logout",
-                            color: Colors.red,
+                            color: AppColors.zincDark,
                             icon: Icons.logout,
                             onPressed: () {
                               final auth = Provider.of<AuthService>(context, listen: false);
@@ -394,8 +515,22 @@ class SummaryRow extends StatelessWidget {
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
-          Text(label, style: TextStyle(fontSize: fontSize, fontWeight: isBold ? FontWeight.bold : FontWeight.normal)),
-          Text(value, style: TextStyle(fontSize: fontSize, fontWeight: isBold ? FontWeight.bold : FontWeight.normal, color: valueColor)),
+          Text(
+            label,
+            style: GoogleFonts.dmSans(
+              fontSize: fontSize,
+              fontWeight: isBold ? FontWeight.bold : FontWeight.normal,
+              color: AppColors.text,
+            ),
+          ),
+          Text(
+            value,
+            style: GoogleFonts.dmSans(
+              fontSize: fontSize,
+              fontWeight: isBold ? FontWeight.bold : FontWeight.normal,
+              color: valueColor ?? AppColors.text,
+            ),
+          ),
         ],
       ),
     );
@@ -422,18 +557,29 @@ class PosButton extends StatelessWidget {
       style: ElevatedButton.styleFrom(
         backgroundColor: color,
         foregroundColor: Colors.white,
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
-        elevation: 2,
+        elevation: 0,
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(2),
+        ),
+        padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
       ),
       onPressed: onPressed,
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          Icon(icon, size: 32),
+          Icon(icon, size: 28, color: Colors.white),
           const SizedBox(height: 8),
-          Text(label, textAlign: TextAlign.center, style: const TextStyle(fontWeight: FontWeight.bold)),
+          Text(
+            label.toUpperCase(),
+            textAlign: TextAlign.center,
+            style: GoogleFonts.dmSans(
+              fontSize: 10,
+              fontWeight: FontWeight.w600,
+              letterSpacing: 1.0,
+            ),
+          ),
         ],
       ),
     );
   }
-}
+}*/

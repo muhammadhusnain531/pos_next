@@ -168,7 +168,7 @@ class HomeDeliveryPage extends StatelessWidget {
                               ),
                               const SizedBox(width: 16),
                               const Text(
-                                '\$75.00',
+                                'Rs. 75.00',
                                 style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
                               ),
                             ],
@@ -213,7 +213,7 @@ class HomeDeliveryPage extends StatelessWidget {
                               ),
                               const SizedBox(width: 16),
                               const Text(
-                                '\$90.00',
+                                'Rs. 90.00',
                                 style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
                               ),
                             ],
@@ -241,16 +241,16 @@ class HomeDeliveryPage extends StatelessWidget {
                             ),
                             child: Column(
                               children: [
-                                _billDetailRow('Items Subtotal', '\$165.00'),
+                                _billDetailRow('Items Subtotal', 'Rs. 165.00'),
                                 const SizedBox(height: 8),
-                                _billDetailRow('Delivery Fee', '\$10.00'),
+                                _billDetailRow('Delivery Fee', 'Rs. 10.00'),
                                 const SizedBox(height: 8),
-                                _billDetailRow('Taxes (5%)', '\$8.25'),
+                                _billDetailRow('Taxes (5%)', 'Rs. 8.25'),
                                 const SizedBox(height: 8),
                                 const Divider(),
                                 _billDetailRow(
                                   'Total Amount',
-                                  '\$183.25',
+                                  'Rs. 183.25',
                                   isBold: true,
                                 ),
                               ],
@@ -319,7 +319,7 @@ class HomeDeliveryPage extends StatelessWidget {
                             child: ElevatedButton.icon(
                               icon: const Icon(Icons.shopping_cart_checkout, color: Colors.white),
                               label: const Text(
-                                'Confirm Order - \$183.25',
+                                'Confirm Order - Rs. 183.25',
                                 style: TextStyle(
                                   fontWeight: FontWeight.bold,
                                   fontSize: 18,

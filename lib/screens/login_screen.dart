@@ -1,6 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:google_fonts/google_fonts.dart';
 import '../services/auth_service.dart';
+import '../services/database_service.dart';
+import '../theme/colors.dart';
+import '../theme/button_styles.dart';
 import 'main_screen.dart';
 import 'admin/admin_dashboard.dart';
 
@@ -107,60 +111,146 @@ class _LoginScreenState extends State<LoginScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Center(
-        child: Card(
-          elevation: 8,
-          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
-          child: Container(
-            width: 400,
-            padding: const EdgeInsets.all(32),
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                const Icon(Icons.point_of_sale, size: 64, color: Colors.blue),
-                const SizedBox(height: 16),
-                Text(
-                  _isSetupMode ? 'Setup Super Admin' : 'POS Next',
-                  style: const TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
-                ),
-                const SizedBox(height: 32),
-                TextField(
-                  controller: _usernameController,
-                  decoration: const InputDecoration(
-                    labelText: 'Username',
-                    prefixIcon: Icon(Icons.person),
-                    border: OutlineInputBorder(),
-                  ),
-                ),
-                const SizedBox(height: 16),
-                TextField(
-                  controller: _passwordController,
-                  obscureText: true,
-                  decoration: const InputDecoration(
-                    labelText: 'Password',
-                    prefixIcon: Icon(Icons.lock),
-                    border: OutlineInputBorder(),
-                  ),
-                ),
-                const SizedBox(height: 24),
-                SizedBox(
-                  width: double.infinity,
-                  height: 50,
-                  child: ElevatedButton(
-                    onPressed: _isLoading ? null : _handleAction,
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: _isSetupMode ? Colors.green : Colors.blue,
-                      foregroundColor: Colors.white,
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(8),
+      body: Container(
+        width: double.infinity,
+        height: double.infinity,
+        decoration: const BoxDecoration(
+          gradient: LinearGradient(
+            begin: Alignment.topLeft,
+            end: Alignment.bottomRight,
+            colors: [
+              AppColors.beigeDeep,
+              AppColors.beigeLight,
+              AppColors.blushPale,
+            ],
+          ),
+        ),
+        child: Center(
+          child: SingleChildScrollView(
+            child: Card(
+              elevation: 4,
+              shape: RoundedRectangleBorder(
+                side: const BorderSide(color: AppColors.border),
+                borderRadius: BorderRadius.circular(2),
+              ),
+              child: Container(
+                width: 360,
+                padding: const EdgeInsets.symmetric(horizontal: 36, vertical: 40),
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    const Icon(
+                      Icons.point_of_sale,
+                      size: 48,
+                      color: AppColors.mauve,
+                    ),
+                    const SizedBox(height: 16),
+                    Text(
+                      _isSetupMode ? 'Setup Super Admin' : 'CŌNTOR 369',
+                      style: GoogleFonts.playfairDisplay(
+                        fontSize: 24,
+                        fontWeight: FontWeight.w500,
+                        letterSpacing: 2.4, // 0.1em
+                        color: AppColors.text,
                       ),
                     ),
-                    child: _isLoading
-                        ? const CircularProgressIndicator(color: Colors.white)
-                        : Text(_isSetupMode ? 'CREATE ADMIN' : 'LOGIN', style: const TextStyle(fontSize: 18)),
-                  ),
+                    const SizedBox(height: 4),
+                    Text(
+                      _isSetupMode ? 'SYSTEM INITIALIZATION' : 'ADMIN / SALES PORTAL',
+                      style: GoogleFonts.dmSans(
+                        fontSize: 10,
+                        fontWeight: FontWeight.w500,
+                        letterSpacing: 2.5, // 0.25em
+                        color: AppColors.textLight,
+                      ),
+                    ),
+                    const SizedBox(height: 32),
+                    TextField(
+                      controller: _usernameController,
+                      decoration: const InputDecoration(
+                        labelText: 'Username',
+                        prefixIcon: Icon(Icons.person),
+                      ),
+                    ),
+                    const SizedBox(height: 16),
+                    TextField(
+                      controller: _passwordController,
+                      obscureText: true,
+                      decoration: const InputDecoration(
+                        labelText: 'Password',
+                        prefixIcon: Icon(Icons.lock),
+                      ),
+                    ),
+                    const SizedBox(height: 24),
+                    SizedBox(
+                      width: double.infinity,
+                      height: 48,
+                      child: ElevatedButton(
+                        onPressed: _isLoading ? null : _handleAction,
+                        style: _isSetupMode 
+                            ? AppButtonStyles.primary.copyWith(
+                                backgroundColor: const WidgetStatePropertyAll(AppColors.ok),
+                              )
+                            : AppButtonStyles.primary,
+                        child: _isLoading
+                            ? const SizedBox(
+                                width: 20,
+                                height: 20,
+                                child: CircularProgressIndicator(
+                                  color: Colors.white,
+                                  strokeWidth: 2,
+                                ),
+                              )
+                            : Text(_isSetupMode ? 'CREATE ADMIN' : 'LOGIN'),
+                      ),
+                    ),
+                    const SizedBox(height: 16),
+                    SizedBox(
+                      width: double.infinity,
+                      height: 40,
+                      child: ElevatedButton.icon(
+                        onPressed: _isLoading ? null : () async {
+                          setState(() => _isLoading = true);
+                          try {
+                            final db = Provider.of<AppDatabase>(context, listen: false);
+                            await db.seedDemoData();
+                            if (mounted) {
+                              ScaffoldMessenger.of(context).showSnackBar(
+                                const SnackBar(
+                                  content: Text("Demo Salon Data seeded successfully! Logging in..."),
+                                  backgroundColor: AppColors.ok,
+                                ),
+                              );
+                              // Refresh state and autofill credentials
+                              await _checkSystemStatus();
+                              _usernameController.text = 'admin';
+                              _passwordController.text = 'admin';
+                              // Auto execute login action
+                              await _handleAction();
+                            }
+                          } catch (e) {
+                            if (mounted) {
+                              ScaffoldMessenger.of(context).showSnackBar(
+                                SnackBar(
+                                  content: Text("Error seeding demo data: $e"),
+                                  backgroundColor: AppColors.bad,
+                                ),
+                              );
+                            }
+                          } finally {
+                            if (mounted) {
+                              setState(() => _isLoading = false);
+                            }
+                          }
+                        },
+                        style: AppButtonStyles.ghost,
+                        icon: const Icon(Icons.playlist_add_check, size: 18),
+                        label: const Text("SEED DEMO DATA"),
+                      ),
+                    ),
+                  ],
                 ),
-              ],
+              ),
             ),
           ),
         ),
